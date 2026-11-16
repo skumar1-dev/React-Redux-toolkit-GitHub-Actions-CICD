@@ -1,0 +1,676 @@
+# Top 30 Real-Time AWS Scenario-Based Interview Questions and Answers
+
+These are practical, real-world AWS interview questions with answers in natural spoken English, the way you should explain them to an interviewer.
+
+The focus is on situations you may face while working as an AWS Cloud Engineer, System Administrator, or DevOps Engineer.
+
+I have included:
+
+- Real production issues.
+- Step-by-step troubleshooting.
+- AWS services involved.
+- Practical solutions.
+- Interview-ready spoken answers.
+
+# 1. EC2 – Real-Time Scenario Questions
+
+AWS EC2 Logo PNG Vector, Icon Free Download
+
+Amazon EC2
+
+### Q1. Your EC2 instance is running, but you cannot connect through SSH. How will you troubleshoot?
+
+Spoken answer:
+
+"First, I will check whether the EC2 instance is in the running state and whether its status checks are passed.
+
+After that, I will verify the Security Group and check whether port 22 is allowed from my IP address.
+
+Then I will check the Network ACL, route table, and Internet Gateway configuration.
+
+I will also verify whether the instance has a public IP address and whether I am using the correct private key.
+
+If everything looks correct, I will check the operating system firewall and SSH service.
+
+Based on the issue, I will fix the configuration and try connecting again."
+
+Important points:
+
+- EC2 status checks.
+- Security Group – port 22.
+- NACL.
+- Public IP.
+- Route table.
+- SSH key permissions.
+- SSH service status.
+
+### Q2. Your EC2 instance CPU utilization suddenly reaches 100%. What will you do?
+
+Spoken answer:
+
+"First, I will open CloudWatch and check the CPU utilization graph to understand when the issue started.
+
+Then I will connect to the EC2 instance and check which process is consuming high CPU using commands like top or htop.
+
+If it is caused by an application process, I will check the application logs and identify the root cause.
+
+If traffic is suddenly increased, I can use Auto Scaling to launch additional instances and distribute traffic through a Load Balancer.
+
+If the workload consistently requires more computing power, I can consider upgrading the EC2 instance type.
+
+My main focus will be to identify the root cause instead of simply restarting the server."
+
+### Q3. Your EC2 instance suddenly becomes unreachable. What will you do?
+
+Spoken answer:
+
+"First, I will check the EC2 instance state and system status checks from the AWS console.
+
+If the instance is running but unreachable, I will investigate network connectivity, Security Groups, NACLs, and route tables.
+
+I will also check whether the operating system is responding.
+
+If SSH is not working, I can use EC2 Serial Console, if supported and enabled, or AWS Systems Manager Session Manager if the required configuration is available.
+
+If it is an underlying infrastructure issue, I will follow the AWS recovery recommendations.
+
+Before taking any destructive action, I will make sure that important data is protected."
+
+### Q4. You have deployed an application on EC2, but users are getting a 502 Bad Gateway error. How will you troubleshoot?
+
+Spoken answer:
+
+"First, I will understand whether the issue is coming from the Load Balancer or the backend application.
+
+I will check the Application Load Balancer target group and verify the health status of registered EC2 instances.
+
+Then I will check the health check path, port, and protocol.
+
+After that, I will connect to the backend server and verify whether the application service is running.
+
+I will also check application logs, web server logs, and Security Group rules between the Load Balancer and EC2 instances.
+
+Once I identify the issue, I will fix the backend application or network configuration and verify the response again."
+
+### Q5. Your EC2 instance is running, but the website is not opening. What will you check?
+
+Spoken answer:
+
+"First, I will check whether the web server, such as Apache or Nginx, is running.
+
+Then I will verify whether the application is listening on the correct port.
+
+I will check the Security Group to make sure HTTP port 80 or HTTPS port 443 is allowed.
+
+I will also verify the public IP, DNS configuration, and route table.
+
+If the server is behind a Load Balancer, I will check target health and listener configuration.
+
+Finally, I will check application logs to identify whether the issue is related to the application or infrastructure."
+
+# 2. S3 – Real-Time Scenario Questions
+
+Amazon S3 Simple Storage Service Logo Vector Png | AWS S3 Bucket Icon - freepng
+
+Amazon S3
+
+### Q6. A user accidentally deletes an important file from an S3 bucket. How will you recover it?
+
+Spoken answer:
+
+"First, I will check whether S3 Versioning was enabled on that bucket.
+
+If versioning is enabled, S3 maintains previous versions of objects.
+
+I can identify the previous version of the deleted file and restore it.
+
+If the object was deleted in a versioned bucket, it may have a delete marker, which can be removed to make the previous version visible again.
+
+If versioning was not enabled, I will check whether a backup or replication copy is available.
+
+That's why I recommend enabling versioning for important production buckets."
+
+### Q7. Your application is unable to upload files to S3. How will you troubleshoot?
+
+Spoken answer:
+
+"First, I will check the application error message to understand whether it is an access issue or a connectivity issue.
+
+Then I will verify the IAM Role or IAM Policy attached to the application.
+
+I will make sure the required S3 permissions, such as PutObject, are available.
+
+I will also check the bucket policy, encryption configuration, and whether the application is accessing the correct bucket.
+
+If the bucket uses SSE-KMS encryption, I will verify the required KMS permissions as well.
+
+After correcting the permissions or configuration, I will test the upload again."
+
+### Q8. Your S3 storage cost is increasing every month. How will you reduce it?
+
+Spoken answer:
+
+"First, I will analyze the storage usage and identify which buckets and objects are consuming more space.
+
+Then I will check whether old files, logs, and backups are still required.
+
+I can configure S3 Lifecycle Policies to automatically move older objects to cheaper storage classes.
+
+For example, frequently accessed files can remain in S3 Standard, while older files can move to Glacier storage classes.
+
+I will also check incomplete multipart uploads and delete unnecessary data according to the retention policy.
+
+This will help reduce storage costs without affecting business requirements."
+
+### Q9. Your S3 bucket contains confidential company data. How will you secure it?
+
+Spoken answer:
+
+"First, I will keep S3 Block Public Access enabled unless there is a specific approved requirement for public access.
+
+I will use IAM policies and bucket policies to provide access only to authorized users and applications.
+
+I will enable encryption at rest using SSE-S3 or SSE-KMS depending on security requirements.
+
+I can also enable versioning and access logging or CloudTrail data events for auditing.
+
+For sensitive data, I will review cross-account access and enforce HTTPS using bucket policies.
+
+My main objective is to prevent unauthorized access and protect company data."
+
+# 3. VPC – Real-Time Scenario Questions
+
+AWS VPC blue icon | Free SVG
+
+Amazon VPC
+
+### Q10. Your EC2 instance in a private subnet cannot access the internet. How will you troubleshoot?
+
+Spoken answer:
+
+"First, I will check whether a NAT Gateway is configured in the public subnet.
+
+Then I will verify whether the NAT Gateway is available and has an Elastic IP address.
+
+After that, I will check the private subnet route table and confirm that the default route points to the NAT Gateway.
+
+I will also verify the public subnet route table to make sure it has a route to the Internet Gateway.
+
+Finally, I will check the Network ACL and Security Group rules.
+
+Once the routing configuration is correct, the private instance should be able to initiate outbound internet connections."
+
+### Q11. An EC2 instance in a public subnet is not accessible from the internet. What could be the reason?
+
+Spoken answer:
+
+"There can be multiple reasons.
+
+First, I will check whether the instance has a public IPv4 address or Elastic IP.
+
+Then I will verify whether the subnet's route table has a default route pointing to the Internet Gateway.
+
+I will check the Security Group to make sure the required port is allowed.
+
+I will also verify the Network ACL and operating system firewall.
+
+If all these configurations are correct, I will check whether the application or SSH service is actually running on the instance."
+
+### Q12. Your application server is in a private subnet, but you need to connect to it for maintenance. How will you do that?
+
+Spoken answer:
+
+"I have multiple options depending on the security requirements.
+
+My preferred approach is AWS Systems Manager Session Manager because it allows me to connect to the instance without opening inbound SSH access.
+
+For this, the instance needs the appropriate IAM permissions, SSM Agent, and connectivity to Systems Manager endpoints.
+
+Another option is to use a Bastion Host in a public subnet and connect to the private instance through it.
+
+I would prefer Session Manager because it reduces the need for publicly exposed management ports."
+
+### Q13. Two EC2 instances in the same VPC cannot communicate. What will you check?
+
+Spoken answer:
+
+"First, I will verify whether both instances are in the correct VPC and check their private IP addresses.
+
+Then I will check their Security Groups to confirm that the required inbound traffic is allowed.
+
+I will also verify the Network ACL rules because NACLs are stateless and need appropriate inbound and outbound rules.
+
+After that, I will check route tables, subnet configurations, and operating system firewalls.
+
+Finally, I will test connectivity using tools like ping, telnet, or nc depending on the protocol and network rules."
+
+# 4. IAM – Real-Time Scenario Questions
+
+AWS IAM (Identity and Access Management) : PNG, AI, EPS, CDR, PDF, SVG Download - iconLogoVector
+
+AWS IAM
+
+### Q14. An EC2 instance needs access to an S3 bucket. How will you provide access securely?
+
+Spoken answer:
+
+"I will create an IAM Role with the required S3 permissions.
+
+For example, if the EC2 instance only needs to read files from a particular bucket, I will provide the required read-only permissions for that bucket.
+
+Then I will attach that IAM Role to the EC2 instance through an instance profile.
+
+After that, the application running on EC2 can automatically obtain temporary credentials.
+
+I will avoid storing AWS access keys directly inside the application or EC2 instance because it is not a secure approach."
+
+### Q15. A developer says they are getting an Access Denied error while accessing an S3 bucket. How will you troubleshoot?
+
+Spoken answer:
+
+"First, I will check which IAM User or Role the developer is using.
+
+Then I will verify the IAM permissions and confirm whether the required S3 actions are allowed.
+
+After that, I will check the bucket policy and any explicit Deny statements.
+
+I will also check whether permissions are restricted by an SCP, permissions boundary, or VPC endpoint policy.
+
+If the bucket uses KMS encryption, I will verify the required KMS permissions.
+
+Once I identify the permission issue, I will grant only the required access."
+
+# 5. RDS – Real-Time Scenario Questions
+
+【AWS】複数のRDSを1つに統合する｜新卒エンジニアの開発日記
+
+Amazon RDS
+
+### Q16. Your application is unable to connect to the RDS database. How will you troubleshoot?
+
+Spoken answer:
+
+"First, I will check whether the RDS database is in the available state.
+
+Then I will verify the database endpoint, port number, username, and password used by the application.
+
+After that, I will check the RDS Security Group and make sure the application server's Security Group is allowed to connect to the database port.
+
+I will also check whether both resources are in the correct VPC and whether network connectivity is available.
+
+Finally, I will check database connection limits and application logs to identify the exact issue."
+
+### Q17. Your RDS database is experiencing high CPU utilization. What will you do?
+
+Spoken answer:
+
+"First, I will open CloudWatch and check the RDS CPU utilization metrics.
+
+Then I will check database connections, memory usage, and read and write activity.
+
+I will use Performance Insights, if enabled and supported, to identify expensive queries and database load.
+
+I will also work with the database team to review slow queries and missing indexes.
+
+If the workload genuinely requires more resources, I can consider scaling the database instance or using read replicas for read-heavy traffic.
+
+I will first identify the root cause before increasing database capacity."
+
+### Q18. Your primary RDS database becomes unavailable. How will you minimize downtime?
+
+Spoken answer:
+
+"For production environments, I recommend using RDS Multi-AZ deployment.
+
+In Multi-AZ, AWS maintains a standby database in another Availability Zone.
+
+If the primary database becomes unavailable, RDS can perform an automatic failover to the standby database.
+
+The application should use the RDS endpoint rather than a hardcoded database IP address so it can reconnect after failover.
+
+I will also monitor the failover event and verify that the application is working correctly afterward."
+
+# 6. CloudWatch – Real-Time Scenario Questions
+
+How to build Web Application Dashboards in AWS CloudWatch | Si Novi
+
+Amazon CloudWatch
+
+### Q19. Your manager asks you to configure an alert whenever EC2 CPU utilization goes above 80%. How will you do it?
+
+Spoken answer:
+
+"First, I will open Amazon CloudWatch and navigate to Alarms.
+
+Then I will create a new alarm and select the EC2 CPU Utilization metric.
+
+I will select the required EC2 instance and configure the threshold to 80%.
+
+I will also configure the evaluation period so that the alarm is triggered only when the metric meets the condition for the specified duration.
+
+Finally, I will connect the alarm to an SNS topic so that the administrator receives an email notification when the threshold is breached."
+
+### Q20. Your application is down, but EC2 CPU utilization looks normal. How will you troubleshoot?
+
+Spoken answer:
+
+"CPU utilization alone does not tell us whether an application is healthy.
+
+First, I will check the application and web server logs in CloudWatch.
+
+Then I will verify whether the application process is running and whether the required port is listening.
+
+I will check memory usage, disk space, network connectivity, and database connectivity.
+
+If the application is behind a Load Balancer, I will also check target health and response codes.
+
+This will help me identify whether the issue is related to the application, database, or infrastructure."
+
+# 7. Load Balancer and Auto Scaling Scenarios
+
+Diagram Concept: AWS Load Balancing Architecture | Mittagouni Yellamma
+
+ELB and Auto Scaling
+
+### Q21. One EC2 instance behind the Load Balancer is unhealthy. What will you do?
+
+Spoken answer:
+
+"First, I will open the Target Group and check the health status of the unhealthy instance.
+
+I will review the health check path, port, and protocol.
+
+Then I will connect to the EC2 instance and verify whether the application is running and responding correctly.
+
+I will also check Security Group rules between the Load Balancer and the EC2 instance.
+
+If the instance has an application issue, I will fix it. If the instance is damaged or cannot be recovered, I will replace it through the Auto Scaling Group if configured."
+
+### Q22. Your website traffic suddenly increases during a sale. How will you handle it?
+
+Spoken answer:
+
+"I will use an Application Load Balancer with an EC2 Auto Scaling Group.
+
+The Load Balancer distributes incoming traffic across multiple healthy EC2 instances.
+
+I will configure scaling policies based on metrics such as average CPU utilization or request count per target.
+
+When traffic increases, Auto Scaling launches additional instances.
+
+When traffic decreases, it terminates unnecessary instances according to the scaling configuration.
+
+This helps maintain application performance and optimize infrastructure costs."
+
+### Q23. Auto Scaling is launching new EC2 instances, but they are immediately terminating. What will you check?
+
+Spoken answer:
+
+"First, I will check the Auto Scaling Group Activity History to understand why the instances are terminating.
+
+Then I will check EC2 system status checks and instance status checks.
+
+I will also verify the Launch Template, AMI, instance type, subnet availability, and IAM permissions.
+
+If the instances are failing Load Balancer health checks, I will check the health check grace period, application startup time, and health check configuration.
+
+Based on the termination reason, I will fix the configuration and test the Auto Scaling Group again."
+
+# 8. Route 53 – Real-Time Scenario Questions
+
+Cloud Icons | Amazon Route 53 64@5x
+
+Amazon Route 53
+
+### Q24. Your website is working through its IP address, but the domain name is not opening. What will you check?
+
+Spoken answer:
+
+"First, I will check the DNS records in Route 53.
+
+I will verify whether the A record or Alias record is pointing to the correct application endpoint.
+
+Then I will check the Hosted Zone and confirm whether the domain registrar is using the correct Route 53 name servers.
+
+I will also check DNS propagation and TTL settings.
+
+If everything looks correct, I will use DNS troubleshooting commands like nslookup or dig to verify the DNS resolution."
+
+### Q25. Your application is running in two AWS regions. How will you route users to a healthy region?
+
+Spoken answer:
+
+"I can use Route 53 Failover Routing or Latency-Based Routing depending on the business requirement.
+
+For disaster recovery, I can configure Failover Routing with a primary and secondary application endpoint.
+
+I will configure health checks to monitor the primary endpoint.
+
+If the primary endpoint becomes unhealthy, Route 53 can return the secondary endpoint for DNS queries according to the failover configuration.
+
+This helps improve application availability across regions."
+
+# 9. Lambda – Real-Time Scenario Questions
+
+File:Amazon Lambda architecture logo.svg - Wikimedia Commons
+
+AWS Lambda
+
+### Q26. Whenever a user uploads an image to S3, you need to resize it automatically. How will you implement this?
+
+Spoken answer:
+
+"I will use Amazon S3 and AWS Lambda together.
+
+First, I will create an S3 bucket where users upload images.
+
+Then I will create a Lambda function containing the image resizing logic.
+
+I will configure an S3 event notification to trigger the Lambda function whenever a new image is uploaded.
+
+The Lambda function will read the uploaded image, resize it, and save the processed image to another S3 location.
+
+This is an example of event-driven serverless architecture."
+
+### Q27. Your Lambda function is timing out. How will you troubleshoot?
+
+Spoken answer:
+
+"First, I will open CloudWatch Logs and check the Lambda execution logs.
+
+Then I will identify which operation is taking more time.
+
+For example, it could be an external API call, database connection, or large file processing.
+
+I will also check the configured timeout and memory allocation.
+
+If the function needs more resources, I can increase its memory and timeout within the supported limits.
+
+I will also optimize the code and check whether the function is waiting for a response from another service."
+
+# 10. Mixed AWS Production Scenarios
+
+These are especially important for experienced AWS and DevOps interviews.
+
+### Q28. Your application is working fine, but suddenly users start reporting slow response times. How will you investigate?
+
+Spoken answer:
+
+"First, I will check CloudWatch metrics for EC2, RDS, and the Load Balancer.
+
+I will look at CPU utilization, memory usage where monitored, network traffic, database connections, and application response time.
+
+Then I will check whether the issue is affecting all users or only a particular application feature.
+
+I will review application logs and database slow queries.
+
+If the problem is caused by increased traffic, I can scale the application using Auto Scaling.
+
+If it is database-related, I will investigate query performance and database capacity.
+
+My approach is to identify which component is causing the delay before making any changes."
+
+### Q29. Your company wants to migrate an application from an on-premises data center to AWS. What steps will you follow?
+
+Spoken answer:
+
+"First, I will understand the existing application architecture, server requirements, database requirements, and network dependencies.
+
+Then I will plan the AWS infrastructure, including VPC, subnets, Security Groups, EC2, RDS, and S3, depending on the application.
+
+I will decide the appropriate migration strategy, such as rehosting, replatforming, or refactoring.
+
+After that, I will migrate the application and database using suitable AWS migration services.
+
+I will perform testing to verify application functionality, performance, and security.
+
+Finally, after successful validation and business approval, I will plan the production cutover."
+
+### Q30. Your company wants to reduce its monthly AWS bill by 30%. What will you do?
+
+Spoken answer:
+
+"First, I will analyze the AWS bill using Cost Explorer and identify which services are consuming the most money.
+
+Then I will check EC2 instances that are underutilized and right-size them.
+
+I will configure Auto Scaling so that unnecessary computing capacity is reduced during low-traffic periods.
+
+For S3, I will use Lifecycle Policies to move older files to cheaper storage classes.
+
+I will also review unused EBS volumes, snapshots, Elastic IP addresses, and other idle resources.
+
+For predictable workloads, I will evaluate Savings Plans or Reserved Instances.
+
+I will continuously monitor costs and make sure that cost optimization does not affect application performance or availability."
+
+# Bonus: One complete real-world AWS architecture interview scenario
+
+### Q31. Suppose an interviewer asks: "Explain how you would design a highly available three-tier web application in AWS."
+
+Very important interview questionGitHub - BJWRD/three-tier-architecture: Highly Available, Fault Tolerant, Three-Tier-Architecture on AWS provisioned via Terraform · GitHub
+
+[github.com](<https://github.com/BJWRD/three-tier-architecture?utm_source=chatgpt.com>)
+
+Spoken answer:
+
+"Suppose I need to host a highly available web application in AWS.
+
+First, I will create a VPC with public and private subnets across at least two Availability Zones.
+
+In the public subnets, I will deploy an Application Load Balancer to receive incoming user traffic.
+
+In the private application subnets, I will deploy EC2 instances using an Auto Scaling Group.
+
+The Load Balancer will distribute traffic across healthy application instances.
+
+For the database layer, I will use Amazon RDS with Multi-AZ deployment to provide high availability.
+
+I will use Security Groups to control communication between the Load Balancer, application servers, and database.
+
+For monitoring, I will configure CloudWatch metrics and alarms.
+
+For DNS management, I will use Route 53.
+
+For application backups and static files, I can use Amazon S3.
+
+With this architecture, I can achieve better availability, scalability, security, and reliability."
+
+Architecture flow:
+
+Users / Internet
+
+Route 53 + Application Load Balancer
+
+Availability Zone 1
+
+Private subnetEC2 App 1
+
+Availability Zone 2
+
+Private subnetEC2 App 2
+
+Amazon RDS Multi-AZ
+
+Primary database + standby in another AZ
+
+Supporting services: IAM · S3 · CloudWatch · Auto Scaling · NAT Gateway
+
+# How to answer scenario-based questions confidently
+
+Use this simple four-step interview formula:
+
+| Step | What to explain |
+| --- | --- |
+| 1. Identify | What is the actual problem? |
+| 2. Investigate | Which AWS service or logs will you check? |
+| 3. Resolve | What action will you take? |
+| 4. Verify | How will you confirm the issue is fixed? |
+
+For example, if the interviewer asks about an EC2 connectivity issue, don't simply say, "I will check the Security Group."
+
+Instead, explain:
+
+"First, I will check the instance status. Then I will verify Security Groups, NACLs, route tables, and public IP configuration. After identifying the issue, I will correct the configuration and test connectivity again."
+
+This makes your answer sound like someone who has practical troubleshooting knowledge.
+
+## Practise with a mock AWS interview
+
+Production troubleshooting test
+
+5 questions
+
+1. An EC2 instance cannot connect to S3. What is the most secure first approach?
+
+Make the S3 bucket public
+
+Attach an IAM Role with required S3 permissions
+
+Disable all Security Groups
+
+Use root account credentials
+
+2. Your private EC2 instance needs outbound internet access. What do you configure?
+
+Internet Gateway route directly
+
+NAT Gateway and private route table
+
+Public IP on every private instance
+
+Route 53
+
+3. An ALB target is unhealthy. What should you investigate?
+
+S3 Versioning
+
+Target health checks and application availability
+
+IAM password policy only
+
+Route 53 domain registration
+
+4. RDS CPU is high. Which feature can help identify expensive queries?
+
+S3 Lifecycle
+
+Performance Insights
+
+Route 53 Resolver
+
+IAM Access Analyzer
+
+5. Your EC2 instances keep terminating in an Auto Scaling Group. What should you check first?
+
+S3 bucket name
+
+Auto Scaling Activity History
+
+Route 53 Hosted Zone
+
+IAM user password
+
+ Submit answers
+
+My suggestion: Practise questions 1–18 first. These cover the most important day-to-day AWS troubleshooting situations. Speak each answer aloud in your own words rather than memorizing it word for word.

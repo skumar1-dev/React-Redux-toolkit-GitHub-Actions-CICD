@@ -1,0 +1,1016 @@
+# Top 35 Real-Time Git, GitHub & Jenkins Interview Questions and Answers for DevOps Engineers
+
+These are practical DevOps interview questions based on real project situations, production issues, CI/CD pipelines, and troubleshooting.
+
+The answers are written in simple spoken English, so you can explain them naturally in an interview rather than sounding like you memorized definitions.
+
+We'll cover:
+
+1. Git and GitHub interview questions.
+2. Jenkins interview questions.
+3. Real-time CI/CD pipeline scenarios.
+4. Jenkinsfile and pipeline questions.
+5. Production troubleshooting scenarios.
+6. End-to-end DevOps project explanation.
+
+# Part 1: Git and GitHub – Real-Time Interview Questions
+
+Hello World
+
+Git
+
+Distributed version control system
+
+### Q1. What is Git, and why do we use it in DevOps?
+
+Spoken answer:
+
+"Git is a distributed version control system. We use Git to manage and track changes in source code.
+
+For example, in a project, multiple developers work on the same application. Instead of sharing code manually, developers push their changes to a central repository, and other developers can pull the latest code.
+
+Git also helps us maintain code history, create branches, compare changes, and roll back to previous versions if something goes wrong.
+
+In DevOps, Git is very important because it is usually the starting point of the CI/CD pipeline."
+
+### Q2. What is the difference between Git and GitHub?
+
+Spoken answer:
+
+"Git is a version control tool that we install and use to manage source code.
+
+GitHub is a cloud-based platform where we host Git repositories and collaborate with other developers.
+
+For example, I use Git commands like add, commit, push, and pull to manage my code. GitHub provides features like Pull Requests, code reviews, branch protection, and collaboration.
+
+So, Git is the version control system, whereas GitHub is a platform that hosts Git repositories."
+
+### Q3. Explain the Git workflow you follow in a real-time project.
+
+Spoken answer:
+
+"In my project, developers usually follow a feature branch workflow.
+
+First, I clone the repository from GitHub.
+
+Then I create a separate feature branch for my task. After making code changes, I check the modified files using git status.
+
+Then I add the changes using git add and commit them with a meaningful commit message.
+
+After that, I push my feature branch to GitHub and create a Pull Request.
+
+Once the code review and required checks are completed, the changes are merged into the main branch."
+
+Important commands:
+
+bash
+
+```bash
+git clone <repository-url>
+git checkout -b feature-login
+git status
+git add .
+git commit -m "Added login functionality"
+git push origin feature-login
+```
+
+### Q4. What is the difference between git pull and git fetch?
+
+Spoken answer:
+
+"Both commands are used to get the latest changes from a remote repository.
+
+Git fetch downloads the latest changes from the remote repository, but it does not automatically merge those changes into my current branch.
+
+Git pull downloads the latest changes and integrates them into my current branch.
+
+In simple words, fetch only downloads the changes, whereas pull downloads and integrates them."
+
+### Q5. What is the difference between git merge and git rebase?
+
+Spoken answer:
+
+"Both merge and rebase are used to integrate changes from one branch into another.
+
+Git merge combines the changes from two branches and may create a merge commit.
+
+Git rebase takes my branch commits and replays them on top of another branch.
+
+In our projects, merge is useful when we want to preserve the actual branching history. Rebase is useful for keeping a feature branch history cleaner.
+
+However, I avoid rebasing shared branches because it can rewrite commit history."
+
+### Q6. What is a Pull Request in GitHub?
+
+Spoken answer:
+
+"A Pull Request is a way to propose code changes from one branch into another branch.
+
+For example, suppose I have completed a feature in my feature branch. I push that branch to GitHub and create a Pull Request to merge it into the development branch.
+
+Then another developer or team lead reviews my code, adds comments if required, and approves it.
+
+After all required checks pass, the changes can be merged.
+
+This helps maintain code quality and prevents unreviewed changes from directly entering important branches."
+
+### Q7. What is a Git merge conflict? How do you resolve it?
+
+Spoken answer:
+
+"A merge conflict happens when Git cannot automatically combine changes from different branches.
+
+For example, two developers modify the same lines in the same file. When we try to merge those branches, Git may report a conflict.
+
+First, I will check which files have conflicts using git status.
+
+Then I will open those files and review both developers' changes.
+
+I will discuss with the concerned developer if the correct change is not clear.
+
+After resolving the conflict, I will add the files and create a commit to complete the merge."
+
+Example commands:
+
+bash
+
+```bash
+git status
+# Edit and resolve conflicting files
+git add .
+git commit -m "Resolved merge conflict"
+```
+
+### Q8. A developer accidentally pushes incorrect code to the main branch. What will you do?
+
+Spoken answer:
+
+"First, I will identify the incorrect commit using git log.
+
+If the changes are already pushed to a shared main branch, I generally prefer using git revert.
+
+Git revert creates a new commit that reverses the changes from the incorrect commit without rewriting the existing history.
+
+After that, I will push the revert commit and verify that the correct code is available.
+
+If the change has already been deployed to production, I will also check the application and deployment status."
+
+### Q9. What is the difference between git reset and git revert?
+
+Spoken answer:
+
+"Git reset moves the current branch reference to an earlier commit and can change the staging area or working directory depending on the option used.
+
+Git revert creates a new commit that reverses the changes made by an earlier commit.
+
+For example, if incorrect code is already pushed to a shared branch, I prefer git revert because it preserves the existing commit history.
+
+I generally use reset for local changes or situations where rewriting history is safe."
+
+### Q10. What is .gitignore?
+
+Spoken answer:
+
+".gitignore is a file where we specify files and folders that Git should not track.
+
+For example, in a DevOps project, we may have log files, temporary files, build folders, and local configuration files.
+
+We don't want to push all these files to GitHub.
+
+So, we add their patterns to the .gitignore file.
+
+One important point is that .gitignore does not automatically stop tracking files that were already committed."
+
+Example:
+
+gitignore
+
+```gitignore
+*.log
+.env
+node_modules/
+target/
+build/
+```
+
+### Q11. What is the difference between git cherry-pick and git merge?
+
+Spoken answer:
+
+"Git cherry-pick is used when I want to take a specific commit from one branch and apply it to another branch.
+
+For example, suppose a developer has committed five changes in a feature branch, but I only need one bug-fix commit in the production branch.
+
+Instead of merging the entire feature branch, I can use cherry-pick to apply only that particular commit.
+
+Git merge, on the other hand, integrates the changes from an entire branch."
+
+Command:
+
+bash
+
+```bash
+git cherry-pick <commit-id>
+```
+
+### Q12. A developer committed code locally but forgot to push it. How will you check?
+
+Spoken answer:
+
+"I will ask the developer to check the commit history using git log.
+
+Then I will check whether the local branch is ahead of the remote branch using git status.
+
+If the commit is available locally but not on GitHub, the developer can push the branch using git push origin followed by the branch name."
+
+bash
+
+```bash
+git status
+git log --oneline
+git push origin feature-branch
+```
+
+### Q13. How do you manage multiple developers working on the same project?
+
+Spoken answer:
+
+"In our project, we follow a branch-based development strategy.
+
+Each developer creates a separate feature branch from the development branch.
+
+After completing the work, they push their changes to GitHub and create a Pull Request.
+
+The team lead reviews the code, and Jenkins can automatically run build and test jobs.
+
+Once the required checks and approvals are completed, the changes are merged into the development branch.
+
+This approach helps us avoid direct changes to important branches and maintain code quality."
+
+### Q14. What is a Git tag? Where do you use it?
+
+Spoken answer:
+
+"A Git tag is used to mark a specific commit in the repository.
+
+For example, when we release an application to production, we can create a tag such as v1.0.0.
+
+Later, if we need to identify which code version was released, we can refer to that tag.
+
+In our CI/CD pipeline, we can also use Git tags to trigger release or production deployment pipelines."
+
+bash
+
+```bash
+git tag -a v1.0.0 -m "Production release"
+git push origin v1.0.0
+```
+
+### Q15. How do you secure a GitHub repository?
+
+Spoken answer:
+
+"I follow multiple security practices.
+
+First, I keep the repository private if it contains company source code.
+
+I enable branch protection rules for important branches like main and require Pull Request approvals.
+
+I also enable secret scanning and push protection where available.
+
+I make sure developers have only the permissions they need.
+
+Most importantly, I never store passwords, AWS access keys, database credentials, or other secrets directly in the repository.
+
+For sensitive values, I use a secret management solution such as AWS Secrets Manager or Jenkins Credentials."
+
+# Part 2: Jenkins – Real-Time Interview Questions
+
+Jenkins Logo Vector PNG | Jenkins Automation Butler Emblem - freepng
+
+Jenkins
+
+Automation server for CI/CD
+
+### Q16. What is Jenkins, and why do we use it in DevOps?
+
+Spoken answer:
+
+"Jenkins is an open-source automation server that is mainly used for Continuous Integration and Continuous Delivery.
+
+In a real-time project, whenever a developer pushes code to GitHub, Jenkins can automatically detect the changes and start the pipeline.
+
+The pipeline can perform different activities such as downloading source code, compiling the application, running unit tests, performing code quality checks, building Docker images, and deploying the application.
+
+So, instead of performing all these activities manually, Jenkins automates the entire process and reduces human errors."
+
+### Q17. Explain a real-time Jenkins CI/CD pipeline.
+
+Spoken answer:
+
+"In my project, we use Jenkins to automate the application build and deployment process.
+
+First, developers push their code to GitHub.
+
+Jenkins detects the code changes through a webhook and starts the pipeline.
+
+The first stage is checkout, where Jenkins downloads the latest source code.
+
+Then we perform the build using tools like Maven or Gradle, depending on the project.
+
+After that, we execute unit tests and code quality analysis using SonarQube.
+
+If all the checks pass, we build a Docker image and push it to a container registry.
+
+Finally, we deploy the application to the target environment, such as an EC2 instance or Kubernetes cluster.
+
+At each stage, Jenkins provides logs and build status, so we can easily identify failures."
+
+“Streamlining Development: CI/CD Pipeline for Deploying a Java Application in Docker” | by Madhavarajas | Medium
+
+[medium.com](<https://medium.com/%40madhavarajas1997/streamlining-development-a-journey-through-ci-cd-pipeline-for-deploying-a-java-application-in-15619bb3a688?utm_source=chatgpt.com>)
+
+### Q18. What is the difference between Freestyle Job and Pipeline Job?
+
+Spoken answer:
+
+"Freestyle Job is a traditional Jenkins job where we configure build steps, source code management, and post-build actions through the Jenkins user interface.
+
+Pipeline Job allows us to define the complete CI/CD workflow as code using a Jenkinsfile.
+
+In real-time projects, I prefer Pipeline Jobs because we can maintain the pipeline inside the Git repository.
+
+It provides better version control, reusability, and collaboration."
+
+### Q19. What is a Jenkinsfile?
+
+Spoken answer:
+
+"Jenkinsfile is a text file that contains the pipeline definition.
+
+It tells Jenkins what activities to perform during the CI/CD process.
+
+For example, we can define stages such as checkout, build, test, Docker image creation, and deployment.
+
+We generally store the Jenkinsfile in the root directory of the application repository.
+
+The biggest advantage is that our pipeline configuration is also maintained as code, just like application source code."
+
+Example Jenkinsfile:
+
+groovy
+
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/company/app.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application'
+            }
+        }
+    }
+}
+```
+
+### Q20. What is the difference between Declarative and Scripted Pipeline?
+
+Spoken answer:
+
+"Jenkins supports two main pipeline syntaxes.
+
+Declarative Pipeline follows a structured syntax. It uses blocks such as pipeline, agent, stages, and steps.
+
+Scripted Pipeline is based more directly on Groovy programming and provides greater flexibility for complex logic.
+
+In most of my regular CI/CD projects, I prefer Declarative Pipeline because it is easier to read, maintain, and understand."
+
+### Q21. What is the difference between Jenkins Master and Agent?
+
+Spoken answer:
+
+"In Jenkins architecture, the controller manages the Jenkins environment, while agents execute build and deployment tasks.
+
+The controller schedules jobs, manages configurations, and monitors the agents.
+
+Agents perform actual tasks like compiling code, running tests, and building Docker images.
+
+For example, in a real-time project, I can configure one Linux agent for Java builds and another agent for Docker-related tasks.
+
+This helps distribute the workload and improves scalability."
+
+[notes.kodekloud.com](<https://notes.kodekloud.com/docs/Certified-Jenkins-Engineer/Agents-and-Nodes-in-Jenkins/Types-of-Agents/page?utm_source=chatgpt.com>)
+
+### Q22. What is a Jenkins Plugin?
+
+Spoken answer:
+
+"A Jenkins Plugin is an extension that adds additional functionality to Jenkins.
+
+For example, if I want Jenkins to integrate with GitHub, Docker, Maven, SonarQube, or Kubernetes, I can install the required plugins.
+
+Plugins help Jenkins communicate with different tools used in the DevOps pipeline.
+
+However, I make sure to use trusted plugins and keep them updated because outdated plugins can create security and compatibility issues."
+
+### Q23. How do you configure GitHub with Jenkins?
+
+Spoken answer:
+
+"First, I install the required Git and GitHub-related plugins in Jenkins.
+
+Then I configure the GitHub repository URL in the Jenkins job.
+
+If the repository is private, I configure authentication using Jenkins Credentials.
+
+After that, I configure a GitHub webhook pointing to the Jenkins endpoint.
+
+I also enable the appropriate webhook trigger in Jenkins.
+
+Now, whenever a developer pushes code to GitHub, GitHub sends an event to Jenkins, and Jenkins starts the pipeline."
+
+### Q24. What is a Webhook in Jenkins?
+
+Spoken answer:
+
+"A webhook is a mechanism used by GitHub to notify Jenkins whenever a particular event occurs.
+
+For example, when a developer pushes new code to GitHub, GitHub sends an HTTP request to the configured Jenkins webhook endpoint.
+
+Jenkins receives the event and triggers the corresponding pipeline.
+
+This removes the need to continuously check GitHub manually for new code changes.
+
+In simple words, webhooks provide event-based integration between GitHub and Jenkins."
+
+### Q25. What are Jenkins Credentials?
+
+Spoken answer:
+
+"Jenkins Credentials is a feature used to securely store sensitive information required by pipelines.
+
+For example, we may need GitHub tokens, SSH private keys, Docker registry credentials, or deployment passwords.
+
+Instead of writing these values directly inside the Jenkinsfile, I store them in Jenkins Credentials and access them through credential IDs.
+
+This helps prevent sensitive information from being exposed in source code."
+
+Example:
+
+groovy
+
+```groovy
+withCredentials([
+    usernamePassword(
+        credentialsId: 'docker-creds',
+        usernameVariable: 'DOCKER_USER',
+        passwordVariable: 'DOCKER_PASS'
+    )
+]) {
+    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+}
+```
+
+### Q26. What is the difference between Build and Deploy?
+
+Spoken answer:
+
+"Build means converting source code into a deployable artifact.
+
+For example, in a Java application, we use Maven to compile the source code, run tests, and generate a JAR or WAR file.
+
+Deployment means taking that artifact and making it available in the target environment.
+
+For example, we can deploy the generated WAR file to Tomcat or deploy a Docker image to Kubernetes.
+
+So, build prepares the application, and deployment makes it available to users."
+
+### Q27. What is a Jenkins Pipeline Stage?
+
+Spoken answer:
+
+"A stage is a logical section of a Jenkins pipeline.
+
+For example, we can divide our pipeline into Checkout, Build, Test, SonarQube Analysis, Docker Build, and Deployment stages.
+
+Each stage performs a particular task.
+
+This makes the pipeline easier to understand and troubleshoot because Jenkins shows the status of every stage separately."
+
+### Q28. What is the difference between Poll SCM and Webhook?
+
+Spoken answer:
+
+"Both are used to trigger Jenkins jobs based on changes in source code.
+
+Poll SCM means Jenkins periodically checks the Git repository to see whether new changes are available.
+
+A webhook works differently. GitHub directly notifies Jenkins whenever a configured event occurs.
+
+In most projects, I prefer webhooks because they trigger the pipeline based on events instead of repeatedly checking the repository."
+
+### Q29. Your Jenkins pipeline is failing. How will you troubleshoot?
+
+Spoken answer:
+
+"First, I will open the failed Jenkins build and check the Console Output.
+
+I will identify which stage is failing, whether it is checkout, build, testing, Docker image creation, or deployment.
+
+Then I will analyze the error message.
+
+For example, if the Maven build fails, I will check the pom.xml file, dependencies, and Java version.
+
+If the Docker build fails, I will check the Dockerfile and build environment.
+
+If deployment fails, I will check the target server connectivity, permissions, and deployment logs.
+
+After fixing the root cause, I will rerun the pipeline and verify that all stages are successful."
+
+### Q30. How do you deploy an application to production using Jenkins?
+
+Spoken answer:
+
+"First, developers push the approved code to the main or release branch.
+
+Jenkins triggers the production pipeline.
+
+The pipeline downloads the code, builds the application, runs tests, and performs code quality checks.
+
+After successful validation, we create the deployment artifact or Docker image.
+
+Before production deployment, we can include a manual approval step depending on company policy.
+
+Once approved, Jenkins deploys the application to production.
+
+Finally, I verify application health, logs, and deployment status to make sure the release is successful."
+
+# Part 3: Real-Time Jenkins and GitHub Production Scenarios
+
+These questions are particularly useful because interviewers want to know how you handle problems in an actual DevOps environment.
+
+### Q31. A developer pushed code to GitHub, but Jenkins did not trigger the pipeline. What will you check?
+
+Spoken answer:
+
+"First, I will check whether the developer successfully pushed the code to the correct GitHub branch.
+
+Then I will verify the webhook configuration in GitHub.
+
+I will check whether the Jenkins webhook URL is correct and whether Jenkins is accessible from GitHub.
+
+After that, I will open the GitHub webhook delivery history and check the response status.
+
+I will also verify whether the correct webhook trigger is enabled in the Jenkins job.
+
+If the webhook is working but the job is not starting, I will check the Jenkins job configuration and logs.
+
+Once I identify the issue, I will correct the webhook or job configuration and perform another test push."
+
+### Q32. Your Jenkins pipeline is successful, but the application is not getting deployed. What will you do?
+
+Spoken answer:
+
+"First, I will check whether the deployment stage actually executed successfully.
+
+Sometimes the build is successful, but the deployment command may not be configured correctly.
+
+I will check the deployment logs and verify whether the correct artifact or Docker image was generated.
+
+Then I will check the target server connectivity, deployment credentials, and permissions.
+
+If we are deploying to Kubernetes, I will check the pod status, deployment events, and container logs.
+
+Finally, I will verify the application URL or health endpoint to confirm that the latest version is running."
+
+### Q33. Your Jenkins build is taking 30 minutes, but earlier it took only 5 minutes. How will you troubleshoot?
+
+Spoken answer:
+
+"First, I will compare the current build with previous successful builds to identify where the additional time is being consumed.
+
+Then I will check the Jenkins agent CPU, memory, disk space, and network utilization.
+
+I will also check whether Maven or Gradle is downloading dependencies repeatedly.
+
+If possible, I will use dependency caching and avoid unnecessary build steps.
+
+I can also use parallel stages for independent tasks, such as testing and static code analysis, where appropriate.
+
+If the agent is overloaded, I will distribute builds across additional agents.
+
+My goal is to identify the slow stage and optimize it rather than simply increasing the server resources."
+
+### Q34. Your Jenkins server goes down. How will you recover it?
+
+Spoken answer:
+
+"First, I will identify whether the issue is related to the Jenkins service, operating system, disk space, memory, or underlying infrastructure.
+
+I will check the server status and Jenkins logs to identify the reason for failure.
+
+If it is a service-level issue, I will try to recover the Jenkins service after identifying and correcting the problem.
+
+If the server itself is unavailable, I will use the available infrastructure recovery procedure.
+
+I will also restore Jenkins configuration, plugins, credentials, and job definitions from a verified backup if required.
+
+That's why I recommend regularly backing up the Jenkins home directory, especially the jobs, configuration, and other important data."
+
+### Q35. A developer wants to deploy code directly to production without approval. What will you do?
+
+Spoken answer:
+
+"In a production environment, I will follow the organization's release management process.
+
+I will configure branch protection rules in GitHub so that developers cannot directly push changes to the main branch.
+
+I will require Pull Request approvals and successful CI checks.
+
+In Jenkins, I can add a manual approval stage before production deployment.
+
+Only authorized team members should be able to approve the production release.
+
+This helps prevent accidental deployments and maintains production stability."
+
+# Part 4: Important Jenkins Pipeline Practical Questions
+
+Interviewers frequently ask you to explain Jenkinsfile code. You should understand these examples because they demonstrate actual CI/CD knowledge.
+
+### Q36. How do you create a Jenkins pipeline with Build, Test, and Deploy stages?
+
+Spoken answer:
+
+"I can create a Declarative Pipeline using a Jenkinsfile.
+
+First, I define the pipeline and agent. Then I create separate stages for checkout, build, testing, and deployment.
+
+Jenkins executes these stages in sequence.
+
+If any required stage fails, the pipeline can stop and report the failure."
+
+Example:
+
+groovy
+
+```groovy
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/company/app.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully'
+        }
+
+        failure {
+            echo 'Pipeline failed'
+        }
+    }
+}
+```
+
+### Q37. How do you send email notifications when a Jenkins pipeline fails?
+
+Spoken answer:
+
+"I can configure email notifications using the Jenkins Email Extension Plugin.
+
+First, I configure the SMTP settings in Jenkins.
+
+Then I use the post section of the Jenkinsfile to send an email when the pipeline fails.
+
+This helps the development and DevOps teams quickly identify build failures."
+
+Example:
+
+groovy
+
+```groovy
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    }
+
+    post {
+        failure {
+            emailext(
+                subject: "Jenkins Build Failed",
+                body: "Please check the Jenkins console output.",
+                to: "devops-team@example.com"
+            )
+        }
+    }
+}
+```
+
+### Q38. How do you build a Docker image using Jenkins?
+
+Spoken answer:
+
+"First, I make sure Docker is installed and available on the Jenkins agent.
+
+Then I configure the Dockerfile in the application repository.
+
+In the Jenkins pipeline, I use the Docker build command to create an image.
+
+After that, I tag the image with the application version and push it to Docker Hub or Amazon ECR.
+
+Finally, the deployment environment pulls the image and runs the application."
+
+Example:
+
+groovy
+
+```groovy
+stage('Docker Build') {
+    steps {
+        sh 'docker build -t myapp:1.0 .'
+    }
+}
+
+stage('Docker Push') {
+    steps {
+        sh 'docker push myapp:1.0'
+    }
+}
+```
+
+In production, use a unique image tag and authenticate with the registry using Jenkins Credentials.
+
+### Q39. How do you run two Jenkins pipeline stages in parallel?
+
+Spoken answer:
+
+"If two tasks are independent of each other, I can execute them in parallel.
+
+For example, after the application is built, I can run unit tests and code quality analysis simultaneously.
+
+This reduces the overall pipeline execution time."
+
+Example:
+
+groovy
+
+```groovy
+stage('Parallel Checks') {
+    parallel {
+        stage('Unit Tests') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Code Quality') {
+            steps {
+                echo 'Running quality analysis'
+            }
+        }
+    }
+}
+```
+
+### Q40. How do you manage different environments like Dev, QA, and Production in Jenkins?
+
+Spoken answer:
+
+"In a real-time project, we maintain separate environments for development, testing, and production.
+
+We can create separate deployment stages or pipelines for each environment.
+
+For example, when developers push code to the development branch, Jenkins deploys it to the Dev environment.
+
+After testing and approval, the same approved application artifact can be promoted to QA and then Production.
+
+We also maintain separate credentials and configuration values for each environment.
+
+For production, I prefer including an approval step before deployment."
+
+# Part 5: Git and Jenkins Commands You Must Know
+
+These commands are frequently asked in practical DevOps interviews.
+
+## Git commands
+
+| Command | Purpose |
+| --- | --- |
+| `git clone` | Clone a repository |
+| `git status` | Check modified files |
+| `git add .` | Stage changes |
+| `git commit` | Save changes locally |
+| `git push` | Push changes to remote |
+| `git pull` | Download and integrate changes |
+| `git fetch` | Download remote changes |
+| `git branch` | List branches |
+| `git checkout -b` | Create and switch branch |
+| `git merge` | Merge branches |
+| `git log` | View commit history |
+| `git revert` | Reverse a commit |
+| `git stash` | Temporarily save changes |
+| `git cherry-pick` | Apply a specific commit |
+| `git tag` | Mark a particular commit |
+
+## Jenkins important concepts
+
+| Concept | What you should know |
+| --- | --- |
+| Jenkinsfile | Pipeline as code |
+| Controller | Manages Jenkins |
+| Agent | Executes pipeline tasks |
+| Plugin | Extends Jenkins functionality |
+| Webhook | Automatically triggers builds |
+| Credentials | Securely stores secrets |
+| Pipeline | Automated CI/CD workflow |
+| Stage | Logical pipeline section |
+| Build | Creates application artifact |
+| Deploy | Releases application |
+| Post | Executes actions after pipeline stages |
+| Workspace | Directory used by a job |
+
+# Part 6: Explain Your Real-Time DevOps Project in an Interview
+
+This is one of the most important questions for a DevOps Engineer.
+
+### Q41. Explain your end-to-end CI/CD project using GitHub and Jenkins.
+
+Must prepareSeamless DevOps: Mastering End-to-End CI/CD Pipeline (Java App) with Jenkins, Maven, SonarQube, Docker, DockerHub and Kubernetes | by Thoufeek | Medium
+
+[medium.com](<https://medium.com/%40thoufeek18/seamless-devops-mastering-end-to-end-ci-cd-pipeline-java-app-with-jenkins-maven-sonarqube-83a3c55afd57?utm_source=chatgpt.com>)
+
+Spoken answer:
+
+"In my project, we use GitHub for source code management and Jenkins for CI/CD automation.
+
+Developers write application code and push their changes to GitHub.
+
+We follow a branching strategy where developers work on feature branches and create Pull Requests to merge their changes into the development or main branch.
+
+Once the code is pushed or merged, GitHub triggers Jenkins through a webhook.
+
+Jenkins starts the pipeline and checks out the latest source code.
+
+Then it builds the application using Maven and runs unit tests.
+
+After that, we perform code quality analysis using SonarQube.
+
+If the quality checks pass, we build a Docker image and push it to the container registry.
+
+Finally, we deploy the application to the target environment.
+
+We use Jenkins credentials to manage sensitive information and CloudWatch or application monitoring tools to monitor the deployed application.
+
+If any pipeline stage fails, we check the console output, identify the root cause, fix the issue, and rerun the pipeline.
+
+This entire process helps us automate application delivery, reduce manual work, and improve deployment consistency."
+
+## Understand the complete workflow
+
+Developer writes application code
+
+Git commit and push to GitHub
+
+GitHub Webhook triggers Jenkins
+
+Jenkins Checkout → Build → Test
+
+SonarQube Code Quality Analysis
+
+Docker Build → Push to Registry
+
+Deploy to Dev / QA / Production
+
+Verify application and monitor
+
+# Part 7: Mock DevOps Interview – Test Your Knowledge
+
+Try answering these as if you are sitting in front of an interviewer.
+
+DevOps interview practice
+
+6 questions
+
+1. A developer pushes code to GitHub, but Jenkins does not start. What do you check first?
+
+Delete the Jenkins job
+
+Check GitHub webhook delivery and Jenkins trigger configuration
+
+Restart the EC2 instance immediately
+
+Delete the GitHub repository
+
+2. A developer pushed incorrect code to a shared main branch. Which Git command is generally safer?
+
+git reset --hard
+
+git revert
+
+git clean -fd
+
+git stash
+
+3. Where should you store Docker Hub credentials used by Jenkins?
+
+Inside the Dockerfile
+
+Inside GitHub source code
+
+Jenkins Credentials
+
+Inside a public text file
+
+4. Which file is used to define a Jenkins Declarative Pipeline?
+
+Dockerfile
+
+Jenkinsfile
+
+pom.xml
+
+.gitignore
+
+5. Jenkins build succeeds, but the application is not updated. What should you check?
+
+GitHub profile picture
+
+Deployment logs and running application version
+
+Git commit author only
+
+Jenkins theme
+
+6. What is the purpose of a GitHub Pull Request?
+
+Delete a branch automatically
+
+Propose changes and request review before merging
+
+Install Jenkins plugins
+
+Build a Docker image
+
+ Submit answers
+
+My interview preparation recommendation:
+
+- First, prepare Git commands and branching strategies.
+- Second, understand GitHub Pull Requests, merge conflicts, and webhooks.
+- Third, practise Jenkinsfile writing and pipeline stages.
+- Fourth, learn Jenkins troubleshooting and production deployment.
+- Finally, practise explaining your complete CI/CD project in 3–5 minutes.
+
+The most important thing is to explain what happened, how you investigated it, what you changed, and how you verified the solution. That is what makes your answers sound like a practical DevOps engineer rather than someone who only knows definitions.

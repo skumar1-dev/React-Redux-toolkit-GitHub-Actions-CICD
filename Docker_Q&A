@@ -608,90 +608,33 @@ In production, we generally prefer graceful shutdown so that our .NET applicatio
 ## Docker command practice
 
 Build Docker image
-
- Copy
-
-docker build -t myapi:v1 .
-
+  docker build -t myapi:v1 .
 List images
-
- Copy
-
-docker images
-
+  docker images
 Run container
-
- Copy
-
-docker run -d -p 8080:8080 myapi:v1
-
+  docker run -d -p 8080:8080 myapi:v1
 List running containers
-
- Copy
-
-docker ps
-
+  docker ps
 List all containers
-
- Copy
-
-docker ps -a
-
+  docker ps -a
 Monitor container logs
-
- Copy
-
-docker logs -f myapi
-
+  docker logs -f myapi
 Access container shell
-
- Copy
-
-docker exec -it myapi sh
-
+  docker exec -it myapi sh
 Inspect container
-
- Copy
-
-docker inspect myapi
-
+  docker inspect myapi
 Stop container
-
- Copy
-
-docker stop myapi
-
+  docker stop myapi
 Remove container
-
- Copy
-
-docker rm myapi
-
+  docker rm myapi
 Remove image
-
- Copy
-
-docker rmi myapi:v1
-
+  docker rmi myapi:v1
 Check Docker disk usage
-
- Copy
-
-docker system df
-
+  docker system df
 Start Compose services
-
- Copy
-
-docker compose up -d
-
+  docker compose up -d
 Stop and remove Compose services
-
- Copy
-
-docker compose down
-
-14 commands
+  docker compose down
 
 ## 8. Top 10 questions to prepare first
 

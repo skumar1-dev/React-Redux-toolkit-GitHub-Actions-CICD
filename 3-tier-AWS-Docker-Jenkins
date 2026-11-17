@@ -1,0 +1,644 @@
+# End-to-end deployment of a 3-tier .NET 8 application on AWS using Docker, EC2, ECR and Jenkins
+
+Let's take exactly your technology stack and understand how to deploy a real-time .NET 8 application on AWS, from development to production.
+
+I'll explain it in a natural, spoken-English style, as if you are explaining your project to an interviewer or a technical team.
+
+## 1. Technology stack
+
+| Layer | Technology |
+| --- | --- |
+| Frontend | ASP.NET Core MVC / React.js |
+| Backend | ASP.NET Core Web API (.NET 8) |
+| Database | Amazon RDS SQL Server |
+| Containerization | Docker |
+| Container hosting | Amazon EC2 |
+| Container registry | Amazon ECR |
+| Load balancer | AWS Application Load Balancer |
+| Networking | Amazon VPC |
+| Monitoring | Amazon CloudWatch |
+| CI/CD | Jenkins |
+
+## 2. Overall AWS architecture
+
+Building an End-to-End CI/CD Pipeline for a React Application on AWS: Jenkins, Docker, Ansible, GitHub Webhooks, and High-Availability EC2 Deployment | by Adejare Hassan | Mar, 2026 | Medium
+
+[medium.com](<https://medium.com/%40lilsharkszn/building-an-end-to-end-ci-cd-pipeline-for-a-react-application-on-aws-jenkins-docker-ansible-6bcec9f49ae5?utm_source=chatgpt.com>)
+
+Our architecture contains three main application layers.
+
+End Users
+
+Browser / Mobile clients
+
+HTTPS request
+
+AWS Application Load Balancer
+
+HTTPS listener, routing and health checks
+
+Presentation tierFrontend container
+
+ASP.NET Core MVC or React.js hosted in Docker
+
+Application tierBackend container
+
+ASP.NET Core Web API (.NET 8) hosted in Docker on EC2
+
+Database tierAmazon RDS SQL Server
+
+Private database subnet, persistent storage
+
+DevOps and supporting services
+
+- Jenkins – CI/CD pipeline
+- Amazon ECR – Docker image storage
+- Amazon EC2 – Docker container hosting
+- CloudWatch – Monitoring and logs
+- IAM – Access permissions
+- KMS – Encryption key management
+
+One important point: Jenkins and ECR are part of the deployment infrastructure, not application tiers.
+
+## 3. Step-by-step end-to-end deployment
+
+### Step 1: Develop the application
+
+First, developers develop the application using Visual Studio or Visual Studio Code.
+
+For example, let's assume our project contains two applications:
+
+- Frontend: ASP.NET Core MVC or React.js.
+- Backend: ASP.NET Core Web API using .NET 8.
+- Database: SQL Server.
+
+The frontend communicates with the backend through REST APIs.
+
+The backend uses Entity Framework Core to communicate with Amazon RDS SQL Server.
+
+We complete the development and perform local testing.
+
+For example:
+
+text
+
+```text
+User Login
+User Registration
+Employee CRUD
+Product Management
+Authentication
+Authorization
+```
+
+Once development is completed, we push our source code into GitHub.
+
+### Step 2: Create Dockerfiles
+
+Now we containerize our applications using Docker.
+
+Why Docker?
+
+Because Docker allows us to package our application along with its required runtime and dependencies into a container image.
+
+This helps us deploy the same application consistently across different environments.
+
+Backend Dockerfile – .NET 8 Web API
+
+dockerfile
+
+```dockerfile
+
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+WORKDIR /src
+
+COPY *.csproj ./
+RUN dotnet restore
+
+COPY . .
+RUN dotnet publish -c Release -o /app/publish
+
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+
+WORKDIR /app
+
+COPY --from=build /app/publish .
+
+EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "MyApi.dll"]
+```
+
+Here, we use a multi-stage Docker build.
+
+First, the SDK image restores dependencies and builds the application.
+
+Then, we copy only the published output into the smaller ASP.NET runtime image.
+
+This reduces the final image size.
+
+For a React frontend, we can create a separate Dockerfile using Node.js to build the React application and Nginx to serve the static files.
+
+For an ASP.NET Core MVC frontend, we create a separate Dockerfile using the .NET 8 SDK and ASP.NET runtime images.
+
+### Step 3: Create AWS infrastructure
+
+Now we log in to the AWS Management Console.
+
+First, we create an Amazon VPC.
+
+For example:
+
+`10.0.0.0/16`
+
+Inside this VPC, we create:
+
+- Two public subnets across two Availability Zones.
+- Two private application subnets.
+- Two private database subnets.
+
+The Application Load Balancer is deployed in public subnets.
+
+The EC2 instances hosting Docker containers are deployed in private application subnets.
+
+Amazon RDS SQL Server is deployed in private database subnets.
+
+We configure security groups to allow only the required communication.
+
+| Source | Destination | Port |
+| --- | --- | --- |
+| Internet | ALB | 443 |
+| ALB | Frontend EC2 | Application port |
+| ALB | Backend EC2 | API port, if separately routed |
+| Frontend container | Backend API | 8080 |
+| Backend EC2 | RDS SQL Server | 1433 |
+| Jenkins | EC2 deployment targets | Approved deployment access |
+
+The database should never be exposed directly to the public internet.
+
+### Step 4: Create Amazon ECR repositories
+
+How to Build a Docker Image and Push it To AWS ECR?
+
+[checkmateq.com](<https://www.checkmateq.com/blog/build-docker-image-to-aws-ecr?utm_source=chatgpt.com>)
+
+Now we create two repositories in Amazon ECR.
+
+For example:
+
+text
+
+```text
+my-frontend
+my-backend
+```
+
+Why do we need ECR?
+
+Because ECR is the Docker image registry provided by AWS.
+
+After building our Docker images, we push them into ECR.
+
+For example:
+
+bash
+
+```bash
+docker build -t my-backend .
+
+docker tag my-backend:latest \
+ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/my-backend:latest
+```
+
+Authenticate Docker with ECR:
+
+bash
+
+```bash
+aws ecr get-login-password --region REGION |
+docker login --username AWS \
+--password-stdin ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com
+```
+
+Push the image:
+
+bash
+
+```bash
+docker push \
+ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/my-backend:latest
+```
+
+Similarly, we build and push the frontend image.
+
+Now our Docker images are securely stored in ECR.
+
+### Step 5: Launch EC2 instances and install Docker
+
+EC2 hosted Docker container with HTML & pushing image to ECR | by Bjorn Nielsen | Medium
+
+[medium.com](<https://medium.com/%40bnalaska96/docker-with-html-image-pushed-to-ecr-4a0244781061?utm_source=chatgpt.com>)
+
+Now we launch EC2 instances in private application subnets.
+
+We install Docker Engine on the instances.
+
+We also configure IAM instance roles so that EC2 can pull Docker images from ECR.
+
+The deployment process is:
+
+1. EC2 authenticates with Amazon ECR using its IAM role.
+2. EC2 pulls the required Docker image.
+3. Docker creates the container.
+4. The application starts inside the container.
+5. We expose the application port internally.
+6. We configure health checks.
+
+Example:
+
+bash
+
+```bash
+docker pull ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/my-backend:latest
+```
+
+Run the container:
+
+bash
+
+```bash
+docker run -d \
+--name my-backend \
+-p 8080:8080 \
+ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/my-backend:latest
+```
+
+For production, we use immutable image tags, such as a Git commit ID or build number, instead of relying on `latest`.
+
+### Step 6: Configure the Application Load Balancer
+
+Now we create an AWS Application Load Balancer.
+
+The ALB receives incoming user requests and forwards them to healthy application targets.
+
+For example:
+
+text
+
+```text
+https://myapplication.com
+        |
+        v
+Application Load Balancer
+        |
+        |---- Frontend target group
+        |       |
+        |       v
+        |    Frontend container
+        |
+        |---- Backend target group
+                |
+                v
+             .NET 8 API
+```
+
+We can configure host-based or path-based routing.
+
+For example:
+
+- `/` routes to the frontend.
+- `/api/*` routes to the backend API.
+
+We configure HTTPS using an ACM certificate.
+
+We also configure health check endpoints, such as `/health`.
+
+Important: When using EC2 instances as ALB targets, we can register the EC2 instance and the port on which the container is exposed.
+
+### Step 7: Configure Amazon RDS SQL Server
+
+Criar uma instância de banco de dados do Microsoft SQL Server e conectar-se a ela - Amazon Relational Database Service
+
+[docs.aws.amazon.com](<https://docs.aws.amazon.com/pt_br/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.SQLServer.html?utm_source=chatgpt.com>)
+
+Now we create an Amazon RDS SQL Server instance.
+
+We select the appropriate SQL Server edition, instance class, storage, and backup configuration.
+
+We configure it inside the private database subnets.
+
+Our backend .NET application connects to RDS using Entity Framework Core.
+
+Example:
+
+csharp
+
+```csharp
+builder.Services.AddDbContext<AppDbContext>(
+    options =>
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString(
+                "DefaultConnection")));
+```
+
+The database connection information is provided securely through environment configuration or AWS Secrets Manager.
+
+The application communicates with RDS through port 1433.
+
+We also configure automated backups and Multi-AZ where supported.
+
+### Step 8: Configure Jenkins CI/CD pipeline
+
+🚀 Jenkins Fundamentals: Simplified with Real-Life Examples & Pipelines
+
+[linkedin.com](<https://www.linkedin.com/pulse/jenkins-fundamentals-simplified-real-life-examples-pipelines-singh-pxjwc?utm_source=chatgpt.com>)
+
+This is one of the most important parts of the project.
+
+We use Jenkins to automate the entire build and deployment process.
+
+Let's understand what happens when a developer pushes code into GitHub.
+
+Complete Jenkins pipeline:
+
+01
+
+GitHub
+
+Developer pushes new code.
+
+02
+
+Jenkins webhook
+
+Jenkins automatically triggers the pipeline.
+
+03
+
+Checkout
+
+Jenkins downloads the latest source code.
+
+04
+
+Build and test
+
+Restore NuGet packages, compile .NET 8 code and execute unit tests.
+
+05
+
+Docker build
+
+Build frontend and backend Docker images.
+
+06
+
+Push to ECR
+
+Authenticate with AWS and upload versioned Docker images.
+
+07
+
+Deploy to EC2
+
+EC2 pulls the new image and starts the updated containers.
+
+08
+
+Validation
+
+Perform health checks and verify the deployment.
+
+### Example Jenkinsfile
+
+This is a simplified Jenkins pipeline for the backend application.
+
+groovy
+
+```groovy
+
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = 'ap-south-1'
+        ECR_REPO = 'my-backend'
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/org/project.git'
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                sh 'dotnet restore'
+                sh 'dotnet build -c Release'
+                sh 'dotnet test -c Release'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh """
+                  docker build \
+                  -t ${ECR_REPO}:${IMAGE_TAG} .
+                """
+            }
+        }
+
+        stage('Push to ECR') {
+            steps {
+                withCredentials([
+                    string(credentialsId: 'aws-account-id',
+                           variable: 'AWS_ACCOUNT')
+                ]) {
+                    sh '''
+                      aws ecr get-login-password \
+                      --region $AWS_REGION |
+                      docker login --username AWS \
+                      --password-stdin \
+                      $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com
+                    '''
+
+                    sh """
+                      docker tag ${ECR_REPO}:${IMAGE_TAG} \
+                      \${AWS_ACCOUNT}.dkr.ecr.\${AWS_REGION}.amazonaws.com/\${ECR_REPO}:${IMAGE_TAG}
+
+                      docker push \
+                      \${AWS_ACCOUNT}.dkr.ecr.\${AWS_REGION}.amazonaws.com/\${ECR_REPO}:${IMAGE_TAG}
+                    """
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Trigger EC2 deployment using approved deployment mechanism'
+            }
+        }
+    }
+}
+```
+
+In production, we can use Jenkins agents, IAM roles or short-lived AWS credentials, and AWS Systems Manager to securely orchestrate deployments to private EC2 instances.
+
+We should also add approval gates, rollback procedures, and post-deployment health checks.
+
+## 4. Encryption and decryption in this architecture
+
+Now let's discuss security and encryption.
+
+In our application, we handle encryption at three levels.
+
+키를 못 지키면 암호화도 무너진다 “KMS로 만드는 데이터 방어선“
+
+[blog.pages.kr](<https://blog.pages.kr/3814?utm_source=chatgpt.com>)
+
+### A. Encryption in transit
+
+When users access our application, we use HTTPS.
+
+For example:
+
+text
+
+```text
+Browser
+   |
+   | HTTPS / TLS
+   v
+Application Load Balancer
+   |
+   | HTTPS where required
+   v
+Frontend / Backend containers
+   |
+   | TLS database connection
+   v
+Amazon RDS SQL Server
+```
+
+This protects data while it travels between services.
+
+### B. Encryption at rest
+
+We use AWS KMS-managed keys for encryption at rest.
+
+For example:
+
+- RDS SQL Server storage encryption.
+- EC2 EBS volume encryption.
+- Other supported AWS storage services.
+
+AWS handles the underlying storage encryption and decryption transparently.
+
+### C. Application-level encryption and decryption
+
+Suppose our application stores sensitive customer information.
+
+The process is:
+
+1. User enters sensitive information.
+2. .NET Web API receives the request.
+3. Application uses AWS KMS-based envelope encryption to encrypt the sensitive value.
+4. Encrypted data is stored in RDS SQL Server.
+5. When an authorized user requests the information, the application retrieves the encrypted value.
+6. The application obtains the necessary decryption capability through KMS.
+7. The application decrypts the information and returns it over HTTPS.
+
+We use IAM roles to authorize the application to access KMS.
+
+We never hardcode encryption keys or AWS access keys inside the Docker image.
+
+Important: Passwords are hashed, not reversibly encrypted. Database storage encryption also does not mean that every SQL query needs an application-level decryption call.
+
+## 5. CloudWatch monitoring
+
+After deployment, we use Amazon CloudWatch for monitoring.
+
+We monitor:
+
+- EC2 CPU utilization.
+- Container application logs.
+- ALB request count and response codes.
+- API errors and response time.
+- RDS CPU and database connections.
+- Disk and memory metrics where configured.
+
+We can configure CloudWatch alarms and notifications through SNS.
+
+For example, if our backend container stops responding, we investigate the application logs, container health, EC2 status, and database connectivity.
+
+## 6. Complete project explanation – Spoken interview style
+
+This is the script I would recommend learning and practicing.
+
+Writing
+
+In my project, we deployed a three-tier .NET 8 application on AWS using Docker and Jenkins.
+
+Our technology stack consists of ASP.NET Core MVC or React.js for the frontend, ASP.NET Core Web API for the backend, and Amazon RDS SQL Server for the database.
+
+First, developers develop the application and push their source code into GitHub.
+
+We containerized both frontend and backend applications using Docker. We created separate Dockerfiles for the frontend and backend.
+
+For the backend, we used a multi-stage Docker build with the .NET 8 SDK image for building and the ASP.NET Core runtime image for running the application.
+
+Coming to AWS infrastructure, we created a VPC with public and private subnets across multiple Availability Zones.
+
+We launched EC2 instances in private application subnets and installed Docker on them.
+
+We also created separate repositories in Amazon ECR for storing our frontend and backend Docker images.
+
+Now, whenever we need to deploy the application, our Jenkins pipeline gets triggered through a GitHub webhook.
+
+Jenkins checks out the latest source code, restores NuGet packages, builds the .NET application, executes unit tests, and creates Docker images.
+
+After successful testing, Jenkins authenticates with Amazon ECR and pushes the Docker images into the respective repositories.
+
+Then our deployment process connects to the EC2 environment through an approved secure deployment mechanism.
+
+The EC2 instances pull the latest approved Docker images from ECR and start the containers.
+
+For traffic management, we configured an AWS Application Load Balancer. It distributes incoming requests to the appropriate frontend and backend target groups.
+
+For the database layer, we use Amazon RDS SQL Server in private subnets. Our backend application communicates with the database using Entity Framework Core.
+
+For security, we configured security groups, IAM roles, HTTPS, AWS Secrets Manager, and AWS KMS.
+
+We use KMS for encryption key management and protect sensitive information through appropriate encryption mechanisms.
+
+Finally, we use Amazon CloudWatch to monitor EC2 instances, application logs, load balancer metrics, and database performance.
+
+So, overall, Jenkins automates our CI/CD process, Docker provides application containerization, ECR stores our Docker images, EC2 hosts our containers, ALB distributes incoming traffic, and RDS manages our SQL Server database.
+
+This is how we achieve automated deployment, scalability, security, and monitoring in our AWS environment.
+
+## 7. Important interview questions
+
+| Interview question | Key point to explain |
+| --- | --- |
+| Why Docker? | Consistent application deployment |
+| Why ECR? | Store Docker images |
+| Why EC2? | Run Docker containers |
+| Why ALB? | Distribute traffic |
+| Why VPC? | Network isolation |
+| Why RDS? | Managed SQL Server |
+| Why Jenkins? | Automate CI/CD |
+| Why CloudWatch? | Monitor application and infrastructure |
+| Why KMS? | Encryption key management |
+| How does Jenkins deploy? | Build → Test → Docker → ECR → EC2 |
+
+One important architecture recommendation: For production, run multiple EC2 instances across two Availability Zones, with the Docker containers registered as ALB targets. Keep RDS in private subnets. This avoids a single EC2 instance becoming a single point of failure.
+
+I can also help you turn this exact architecture into a realistic project implementation with a complete Jenkinsfile, frontend and backend Dockerfiles, Docker Compose configuration, AWS deployment steps, and an architecture diagram.

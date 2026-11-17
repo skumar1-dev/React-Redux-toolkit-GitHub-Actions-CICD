@@ -1,1 +1,773 @@
+# Docker Interview Questions and Answers – .NET 8 + AWS Project
 
+I'll explain Docker interview questions in a real-time project scenario and natural spoken-English style, so you can answer confidently in technical interviews.
+
+Since your project uses ASP.NET Core Web API (.NET 8), React.js / ASP.NET Core MVC, AWS EC2, ECR, RDS SQL Server, and Jenkins, I'll connect the Docker concepts to this architecture.
+
+## 1. Docker fundamentals
+
+### Q1. What is Docker?
+
+Spoken answer:
+
+Docker is a containerization platform that allows us to package an application along with its dependencies, libraries, configuration, and runtime into a single unit called a container image.
+
+In my project, we developed an ASP.NET Core Web API using .NET 8. Instead of deploying the application directly onto the EC2 server, we created a Docker image.
+
+We run that image as a container on EC2.
+
+The main advantage is that the application behaves consistently across development, testing, staging, and production environments.
+
+### Q2. What is a Docker container?
+
+A Docker container is a running instance of a Docker image.
+
+For example, we create a Docker image for our .NET 8 Web API. When we run that image, Docker creates a container.
+
+Inside that container, our ASP.NET Core application runs with its required runtime and dependencies.
+
+We can run multiple containers using the same image.
+
+### Q3. What is the difference between Docker image and container?
+
+| Docker image | Docker container |
+| --- | --- |
+| It is a blueprint. | It is a running instance. |
+| It is generally immutable. | It has a writable container layer. |
+| Created using Dockerfile. | Created using an image. |
+| Can be stored in ECR. | Runs on EC2 or another container host. |
+
+Spoken answer:
+
+I would say a Docker image is like a template, and a Docker container is the actual running application created from that template.
+
+For example, we build one .NET API image and use that same image to run multiple containers.
+
+### Q4. What is a Dockerfile?
+
+A Dockerfile is a text file containing instructions to build a Docker image.
+
+For example, in our .NET 8 project, we use a Dockerfile to define:
+
+- Base .NET SDK image.
+- Working directory.
+- Application source code.
+- NuGet package restoration.
+- Application build and publish.
+- Runtime image.
+- Application startup command.
+
+Example:
+
+dockerfile
+
+```dockerfile
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+WORKDIR /src
+
+COPY . .
+
+RUN dotnet restore
+
+RUN dotnet publish -c Release -o /app/publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+
+WORKDIR /app
+
+COPY --from=build /app/publish .
+
+EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "MyApi.dll"]
+```
+
+### Q5. What is the difference between Docker and a virtual machine?
+
+Setup ROS2 in a Docker Container - Devansh Dhrafani
+
+[devanshdhrafani.com](<https://devanshdhrafani.com/posts/2021-04-15-dockerros2/?utm_source=chatgpt.com>)
+
+Spoken answer:
+
+The main difference is that a virtual machine has its own guest operating system, whereas Docker containers share the host operating system kernel.
+
+Virtual machines are generally heavier and require more resources.
+
+Docker containers are lightweight, start faster, and make application deployment easier.
+
+In our project, we used Docker containers to run our .NET applications on AWS EC2.
+
+### Q6. What are the main advantages of Docker?
+
+Spoken answer:
+
+The main advantages of Docker are portability, lightweight deployment, scalability, isolation, consistency, and faster application delivery.
+
+In our project, Docker helped us package our frontend and backend applications separately and deploy them consistently across different environments.
+
+## 2. Docker commands – Frequently asked
+
+### Q7. What are the commonly used Docker commands?
+
+These are important commands you should remember.
+
+| Command | Purpose |
+| --- | --- |
+| `docker --version` | Check Docker version |
+| `docker images` | List available images |
+| `docker ps` | List running containers |
+| `docker ps -a` | List all containers |
+| `docker build -t myapi .` | Build image |
+| `docker run -d myapi` | Run container in background |
+| `docker stop myapi` | Stop container |
+| `docker start myapi` | Start stopped container |
+| `docker restart myapi` | Restart container |
+| `docker rm myapi` | Remove container |
+| `docker rmi myapi` | Remove image |
+| `docker logs myapi` | Check container logs |
+| `docker exec -it myapi sh` | Open container shell |
+| `docker inspect myapi` | Inspect container details |
+| `docker pull nginx` | Pull image |
+| `docker push myapi` | Push image to registry |
+
+### Q8. How do you create a Docker image?
+
+Spoken answer:
+
+First, we create a Dockerfile in our application project.
+
+Then we execute the Docker build command from the directory containing the Dockerfile.
+
+For example:
+
+bash
+
+```bash
+docker build -t myapi:v1 .
+```
+
+Here, `-t` is used to assign a name and tag to the image, and the dot represents the current build context.
+
+After successful execution, Docker creates the image.
+
+### Q9. How do you run a Docker container?
+
+We use the Docker run command.
+
+bash
+
+```bash
+docker run -d \
+--name myapi \
+-p 8080:8080 \
+myapi:v1
+```
+
+Here:
+
+- `-d` runs the container in the background.
+- `--name` assigns a container name.
+- `-p` maps the host port to the container port.
+- `myapi:v1` is the image name and tag.
+
+### Q10. What is the difference between CMD and ENTRYPOINT?
+
+Both are used to define what command should execute when a container starts.
+
+- ENTRYPOINT defines the main executable.
+- CMD provides default arguments or a default command.
+
+For example:
+
+dockerfile
+
+```dockerfile
+ENTRYPOINT ["dotnet", "MyApi.dll"]
+```
+
+In our .NET application, we generally use ENTRYPOINT to start the ASP.NET Core application.
+
+### Q11. What is the difference between COPY and ADD?
+
+Both instructions copy files into a Docker image.
+
+- COPY is used for straightforward file and directory copying.
+- ADD supports additional features, such as extracting local tar archives.
+
+In our project, we generally prefer COPY because it is simple and predictable.
+
+### Q12. What is EXPOSE in Docker?
+
+EXPOSE documents the port on which the application listens inside the container.
+
+For example:
+
+dockerfile
+
+```dockerfile
+EXPOSE 8080
+```
+
+It does not automatically publish the port to the host machine.
+
+For publishing, we use the `-p` option in the Docker run command.
+
+## 3. Docker architecture and advanced concepts
+
+### Q13. Explain Docker architecture.
+
+Understanding Docker Architecture: Docker Client, Docker Daemon, Docker Host, Registry, Images, Containers & Volumes
+
+[linkedin.com](<https://www.linkedin.com/pulse/understanding-docker-architecture-client-daemon-host-registry-rlfac?tl=en&utm_source=chatgpt.com>)
+
+Spoken answer:
+
+Docker architecture mainly consists of three components.
+
+1. Docker Client.
+2. Docker Daemon.
+3. Docker Registry.
+
+The Docker client is where we execute commands like Docker build, Docker run, and Docker pull.
+
+The Docker daemon receives those commands and manages Docker images, containers, networks, and volumes.
+
+The Docker registry is where Docker images are stored.
+
+In our AWS project, we use Amazon ECR as our Docker image registry.
+
+### Q14. What is a multi-stage Docker build?
+
+A multi-stage build allows us to use multiple Docker images in a single Dockerfile.
+
+For example, in our .NET 8 application:
+
+- First stage: We use the .NET SDK image to restore packages and build the application.
+- Second stage: We use the ASP.NET Core runtime image to execute the published application.
+
+We copy only the published files from the build stage into the runtime stage.
+
+The advantage is that the final image is smaller and does not need the full SDK.
+
+### Q15. What is Docker volume?
+
+A Docker volume is used to persist data outside the container's writable layer.
+
+For example, if we remove a container, the data stored only inside that container may be lost.
+
+By using Docker volumes, we can preserve the data independently of the container lifecycle.
+
+In our AWS project, we use Amazon RDS for persistent SQL Server database storage rather than storing production database files inside application containers.
+
+### Q16. What is Docker networking?
+
+Docker networking allows containers to communicate with each other and external services.
+
+For example, in our project, we have separate frontend and backend containers.
+
+The frontend communicates with the backend using its API endpoint.
+
+Docker provides different network types, such as:
+
+- Bridge network.
+- Host network.
+- None network.
+- Overlay network.
+
+For a simple EC2 Docker deployment, we can use a user-defined bridge network.
+
+### Q17. What is Docker Compose?
+
+Docker Compose is a tool used to define and run multiple containers using a YAML configuration file.
+
+For example, our application has a frontend and backend.
+
+Instead of starting each container separately, we can define both services inside a `docker-compose.yml` file.
+
+Example:
+
+yaml
+
+```yaml
+services:
+
+  backend:
+    image: myapi:v1
+    ports:
+      - "8080:8080"
+
+  frontend:
+    image: myfrontend:v1
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+```
+
+Then we execute:
+
+bash
+
+```bash
+docker compose up -d
+```
+
+This starts the services defined in the Compose file.
+
+### Q18. What is the difference between Docker Compose and Kubernetes?
+
+Spoken answer:
+
+Docker Compose is mainly used to define and manage multiple containers, especially for development and simpler deployments.
+
+Kubernetes is a container orchestration platform used to manage containers at scale.
+
+Kubernetes provides features such as automated scheduling, self-healing, service discovery, and scaling.
+
+In our project, we use Docker with EC2 for container hosting, so we don't necessarily need Kubernetes.
+
+## 4. Real-time Docker troubleshooting questions
+
+These are especially important for experienced .NET and AWS developers.
+
+### Q19. What will you do if a Docker container stops unexpectedly?
+
+Spoken answer:
+
+First, I check the running and stopped containers using:
+
+bash
+
+```bash
+docker ps -a
+```
+
+Then I check the container logs:
+
+bash
+
+```bash
+docker logs myapi
+```
+
+I also inspect the container:
+
+bash
+
+```bash
+docker inspect myapi
+```
+
+Based on the error, I identify whether it is an application startup issue, configuration issue, memory issue, or database connectivity issue.
+
+After fixing the problem, I restart or redeploy the container.
+
+### Q20. How do you check Docker container logs?
+
+We use:
+
+bash
+
+```bash
+docker logs myapi
+```
+
+To continuously monitor logs:
+
+bash
+
+```bash
+docker logs -f myapi
+```
+
+In our AWS environment, we can also configure the Docker logging driver or CloudWatch agent to send container logs to Amazon CloudWatch.
+
+### Q21. What happens if the Docker container is deleted?
+
+If we delete a container, the container itself and its writable layer are removed.
+
+However, the Docker image remains available unless we explicitly remove it.
+
+Any data stored in persistent Docker volumes remains available.
+
+That's why we don't store important production data only inside the container.
+
+### Q22. How do you reduce Docker image size?
+
+Spoken answer:
+
+In our project, we use multi-stage Docker builds.
+
+We use the .NET SDK image only for building and the ASP.NET Core runtime image for running.
+
+We also use a suitable `.dockerignore` file to exclude unnecessary files such as bin, obj, Git metadata, and local configuration files.
+
+This helps reduce the final image size and deployment time.
+
+### Q23. What is a Docker health check?
+
+A health check is used to determine whether an application inside a container is functioning correctly.
+
+For example, in our .NET API, we create a health endpoint:
+
+csharp
+
+```csharp
+builder.Services.AddHealthChecks();
+
+app.MapHealthChecks("/health");
+```
+
+We can configure Docker to periodically call this endpoint.
+
+dockerfile
+
+```dockerfile
+HEALTHCHECK --interval=30s \
+  --timeout=5s \
+  --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
+```
+
+The runtime image must have curl installed for this example.
+
+We can also configure ALB health checks separately to verify whether the application is ready to receive traffic.
+
+### Q24. How do you pass environment variables to Docker containers?
+
+We can pass environment variables using the `-e` option.
+
+For example:
+
+bash
+
+```bash
+docker run -d \
+-e ASPNETCORE_ENVIRONMENT=Production \
+-p 8080:8080 \
+myapi:v1
+```
+
+In our project, we use environment variables for application configuration.
+
+For sensitive values, we use AWS Secrets Manager or another secure secret-injection mechanism rather than exposing passwords in command history or container inspection output.
+
+### Q25. How do you troubleshoot database connectivity from a Docker container?
+
+Spoken answer:
+
+First, I verify whether the application container is running.
+
+Then I check the application logs to identify the database connection error.
+
+Next, I verify the RDS endpoint, database port, connection string, and security group configuration.
+
+I also check whether the EC2 instance can communicate with the RDS database through the VPC network.
+
+In our architecture, the RDS security group allows connections on port 1433 only from the backend application security group.
+
+## 5. Docker + AWS + Jenkins interview questions
+
+These are the most important questions based on your project architecture.
+
+### Q26. How did you deploy Docker containers on AWS?
+
+Building an End-to-End CI/CD Pipeline for a React Application on AWS: Jenkins, Docker, Ansible, GitHub Webhooks, and High-Availability EC2 Deployment | by Adejare Hassan | Mar, 2026 | Medium
+
+[medium.com](<https://medium.com/%40lilsharkszn/building-an-end-to-end-ci-cd-pipeline-for-a-react-application-on-aws-jenkins-docker-ansible-6bcec9f49ae5?utm_source=chatgpt.com>)
+
+Spoken answer:
+
+In our project, we used Amazon EC2 to host Docker containers.
+
+First, we created Docker images for our frontend and backend applications.
+
+Then we pushed those images into Amazon ECR.
+
+We launched EC2 instances in private subnets and installed Docker on them.
+
+We configured IAM roles so that EC2 could securely authenticate with ECR and pull the required images.
+
+Then we started the containers on EC2.
+
+Finally, we configured an Application Load Balancer to distribute incoming traffic to the application containers.
+
+### Q27. What is Amazon ECR?
+
+Amazon Elastic Container Registry is a fully managed AWS container image registry.
+
+In our project, we use ECR to store frontend and backend Docker images.
+
+After Jenkins builds the images, it pushes them into ECR.
+
+Then our EC2 instances pull those images from ECR and run them as containers.
+
+### Q28. How does Jenkins integrate with Docker?
+
+Spoken answer:
+
+In our project, Jenkins is responsible for automating the CI/CD pipeline.
+
+Whenever a developer pushes code into GitHub, Jenkins gets triggered through a webhook.
+
+Jenkins checks out the code, restores NuGet packages, builds the .NET application, and runs unit tests.
+
+After successful testing, Jenkins builds Docker images.
+
+Then it authenticates with Amazon ECR and pushes the images into the respective repositories.
+
+Finally, Jenkins triggers the deployment process on EC2.
+
+### Q29. Explain your complete Docker CI/CD pipeline.
+
+Supercharge Software Delivery: Mastering CI/CD with Jenkins, AWS ECR, and ECS | by Praveen Dandu | Medium
+
+[praveendandu24.medium.com](<https://praveendandu24.medium.com/supercharge-software-delivery-mastering-ci-cd-with-jenkins-aws-ecr-and-ecs-6f19aa373190?utm_source=chatgpt.com>)
+
+Spoken answer:
+
+Our CI/CD pipeline starts when a developer pushes code into GitHub.
+
+A webhook triggers Jenkins.
+
+Jenkins checks out the latest code and performs the build and unit testing.
+
+Then it creates separate Docker images for the frontend and backend.
+
+After successful validation, Jenkins pushes those images into Amazon ECR with version-specific tags.
+
+Next, our deployment process updates the EC2 containers by pulling the newly approved images.
+
+Finally, we perform application health checks and verify whether the deployment is successful.
+
+### Q30. How do you implement rollback in Docker deployment?
+
+Spoken answer:
+
+In our project, we maintain version-specific Docker image tags.
+
+For example:
+
+text
+
+```text
+myapi:101
+myapi:102
+myapi:103
+```
+
+Suppose the latest deployment, version 103, has an issue.
+
+We can redeploy the previously working version 102.
+
+This allows us to roll back without rebuilding the entire application.
+
+We also verify the application health after rollback.
+
+### Q31. How do you secure Docker containers?
+
+Spoken answer:
+
+We follow multiple security practices.
+
+- We use trusted and maintained base images.
+- We avoid running containers as root wherever possible.
+- We scan Docker images for vulnerabilities.
+- We don't store passwords or AWS credentials inside Dockerfiles.
+- We use IAM roles for AWS service access.
+- We use private ECR repositories.
+- We restrict network access through security groups.
+- We regularly update base images and dependencies.
+
+### Q32. What is the difference between Docker stop and Docker kill?
+
+- `docker stop` gracefully stops a container by sending a termination signal and allowing time for shutdown.
+- `docker kill` immediately sends a termination signal, SIGKILL by default.
+
+In production, we generally prefer graceful shutdown so that our .NET application can finish ongoing requests and release resources properly.
+
+## 6. Important scenario-based interview questions
+
+| Scenario | What you should explain |
+| --- | --- |
+| Container keeps restarting | Check logs, exit code and startup configuration |
+| API is not accessible | Check port mapping, security groups and ALB |
+| Docker image is too large | Multi-stage build and `.dockerignore` |
+| Database connection fails | Check RDS endpoint, port and network |
+| New deployment fails | Roll back to previous image tag |
+| Container consumes high memory | Inspect resource usage and application memory |
+| Jenkins cannot push to ECR | Check IAM permissions and authentication |
+| Container runs locally but not on EC2 | Check environment variables, ports, runtime and architecture |
+| Frontend cannot call backend | Check API URL, DNS, routing and CORS |
+| Container logs are missing | Check logging configuration and CloudWatch integration |
+
+## 7. Practical Docker commands – Revision sheet
+
+## Docker command practice
+
+Build Docker image
+
+ Copy
+
+docker build -t myapi:v1 .
+
+List images
+
+ Copy
+
+docker images
+
+Run container
+
+ Copy
+
+docker run -d -p 8080:8080 myapi:v1
+
+List running containers
+
+ Copy
+
+docker ps
+
+List all containers
+
+ Copy
+
+docker ps -a
+
+Monitor container logs
+
+ Copy
+
+docker logs -f myapi
+
+Access container shell
+
+ Copy
+
+docker exec -it myapi sh
+
+Inspect container
+
+ Copy
+
+docker inspect myapi
+
+Stop container
+
+ Copy
+
+docker stop myapi
+
+Remove container
+
+ Copy
+
+docker rm myapi
+
+Remove image
+
+ Copy
+
+docker rmi myapi:v1
+
+Check Docker disk usage
+
+ Copy
+
+docker system df
+
+Start Compose services
+
+ Copy
+
+docker compose up -d
+
+Stop and remove Compose services
+
+ Copy
+
+docker compose down
+
+14 commands
+
+## 8. Top 10 questions to prepare first
+
+If you have limited interview preparation time, focus on these questions:
+
+1. What is Docker and why do we use it?
+2. What is the difference between image and container?
+3. Explain Docker architecture.
+4. What is a Dockerfile?
+5. What is a multi-stage Docker build?
+6. What is Docker Compose?
+7. How do you deploy Docker containers on AWS EC2?
+8. How do you push Docker images into Amazon ECR?
+9. Explain Docker integration with Jenkins CI/CD.
+10. How do you troubleshoot and roll back a failed Docker deployment?
+
+## 9. Test your interview preparation
+
+Try answering these questions without looking at the answers.
+
+Docker mini mock interview
+
+5/5 answered
+
+1. What is the difference between Docker image and container?
+
+0 Image is a blueprint; container is its running instance.
+
+Both are exactly the same.
+
+Container is used only to store images.
+
+CorrectAn image is the packaged template. A container is an instance created from that image.
+
+2. Where do you store Docker images in your AWS project?
+
+Amazon RDS
+
+1 Amazon ECR
+
+Amazon CloudWatch
+
+CorrectAmazon ECR is AWS's managed container image registry.
+
+3. Which Docker build technique reduces the final .NET image size?
+
+Host networking
+
+1 Multi-stage build
+
+Docker kill
+
+CorrectThe SDK is used for building and only published files are copied into the runtime image.
+
+4. What triggers the Jenkins pipeline in your project?
+
+0 GitHub webhook
+
+RDS backup
+
+Docker volume
+
+CorrectA GitHub webhook can notify Jenkins when new code is pushed.
+
+5. Which AWS service hosts your Docker containers in this architecture?
+
+Amazon ECR
+
+1 Amazon EC2
+
+Amazon KMS
+
+CorrectEC2 provides the compute instances where Docker runs.
+
+ Check my answers # Score: 5/5
+
+ Try again
+
+My interview tip: Don't just memorize Docker definitions. Connect every answer to your actual deployment: `.NET 8 → Docker image → ECR → EC2 → ALB → RDS`, with Jenkins automating the pipeline. This makes your answers sound like real project experience rather than textbook explanations.

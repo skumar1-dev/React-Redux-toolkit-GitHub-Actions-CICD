@@ -1,0 +1,64 @@
+Understood. We'll update the architecture to use Jenkins for CI/CD and remove Amazon ECS with Fargate completely.
+
+The updated architecture will use Docker containers deployed directly on Amazon EC2 instances. Jenkins will automate the build, Docker image creation, ECR push and deployment.
+
+## Updated technology stack
+
+| Layer | Technology |
+| --- | --- |
+| Frontend | ASP.NET Core MVC / Angular |
+| Backend | ASP.NET Core Web API (.NET 8) |
+| Database | Amazon RDS SQL Server |
+| Containerization | Docker |
+| Container hosting | Amazon EC2 |
+| Container registry | Amazon ECR |
+| Load balancer | AWS Application Load Balancer |
+| Networking | Amazon VPC |
+| Monitoring | Amazon CloudWatch |
+| CI/CD | Jenkins |
+
+## Updated AWS architecture
+
+Building an End-to-End CI/CD Pipeline for a React Application on AWS: Jenkins, Docker, Ansible, GitHub Webhooks, and High-Availability EC2 Deployment | by Adejare Hassan | Mar, 2026 | Medium
+
+[medium.com](<https://medium.com/%40lilsharkszn/building-an-end-to-end-ci-cd-pipeline-for-a-react-application-on-aws-jenkins-docker-ansible-6bcec9f49ae5?utm_source=chatgpt.com>)
+
+## Updated deployment flow
+
+1. Developer writes .NET code in Visual Studio.
+2. Developer pushes code to GitHub.
+3. Jenkins pipeline gets triggered through a webhook.
+4. Jenkins restores NuGet packages, builds the .NET application and runs unit tests.
+5. Jenkins builds Docker images for frontend and backend.
+6. Jenkins pushes Docker images to Amazon ECR.
+7. Jenkins connects to EC2 instances and deploys the latest Docker images.
+8. Docker containers run on EC2 instances.
+9. Application Load Balancer distributes incoming traffic.
+10. Backend connects to Amazon RDS SQL Server.
+11. CloudWatch monitors application logs and infrastructure.
+
+## Updated spoken explanation
+
+"In our project, we have implemented a three-tier .NET application and deployed it on AWS using Docker.
+
+We have ASP.NET Core MVC for the presentation layer, ASP.NET Core Web API using .NET 8 for the business logic, and Amazon RDS SQL Server for the database.
+
+We containerize both frontend and backend applications using Docker. We create separate Docker images for both applications.
+
+We use Amazon ECR to store our Docker images.
+
+For hosting, we use Amazon EC2 instances, where Docker containers are deployed and executed.
+
+We use an AWS Application Load Balancer to distribute incoming user requests across the application instances.
+
+For networking, we use Amazon VPC with public and private subnets. Our application servers run in private subnets, and our database is hosted in private database subnets.
+
+For CI/CD, we use Jenkins integrated with GitHub.
+
+Whenever a developer pushes code to GitHub, Jenkins automatically triggers the pipeline. Jenkins restores NuGet packages, builds the .NET application, runs unit tests, builds Docker images and pushes them into Amazon ECR.
+
+After successfully pushing the images, Jenkins connects to the EC2 instances and deploys the latest Docker containers.
+
+Finally, we use Amazon CloudWatch for monitoring application logs and infrastructure metrics."
+
+Important: In this architecture, Jenkins handles CI/CD, EC2 hosts the Docker containers, and ECR stores the images. We are not using ECS or Fargate.

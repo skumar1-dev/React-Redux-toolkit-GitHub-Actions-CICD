@@ -1,0 +1,702 @@
+
+# Git and GitHub Interview Questions & Answers – Spoken English Style
+
+Let's prepare Git and GitHub interview questions from basic to advanced, using real-time project scenarios.
+
+I'll connect the answers to your .NET 8 + Docker + AWS + Jenkins project so you can explain them naturally in interviews.
+
+## 1. Git and GitHub fundamentals
+
+### Q1. What is Git?
+
+Spoken answer:
+
+Git is a distributed version control system. We use Git to track changes in our source code and manage different versions of our application.
+
+In my project, multiple developers work on the same .NET 8 application. Each developer makes code changes and commits them using Git.
+
+This helps us track who made the changes, when the changes were made, and what exactly was modified.
+
+It also helps us go back to previous versions if something goes wrong.
+
+### Q2. What is GitHub?
+
+GitHub is a cloud-based platform where we host and manage Git repositories.
+
+In our project, we use GitHub to store our application source code.
+
+Developers push their code into GitHub, create feature branches, raise pull requests, and participate in code reviews.
+
+We also integrate GitHub with Jenkins to trigger our CI/CD pipeline whenever new code is pushed.
+
+### Q3. What is the difference between Git and GitHub?
+
+| Git | GitHub |
+| --- | --- |
+| Version control system | Cloud-based code hosting platform |
+| Works locally | Hosts repositories remotely |
+| Tracks code changes | Supports collaboration |
+| Uses commands like commit and merge | Provides pull requests and code reviews |
+| Can work without internet | Requires network access for remote operations |
+
+Spoken answer:
+
+Git is the tool we use to manage source code versions, whereas GitHub is the platform where we host our Git repositories and collaborate with other developers.
+
+### Q4. What is a Git repository?
+
+A Git repository is a location where Git tracks our project files, commits, branches, and history.
+
+We have two types:
+
+- Local repository – Available on the developer's machine.
+- Remote repository – Hosted on GitHub.
+
+### Q5. What is the difference between Git and SVN?
+
+Git is a distributed version control system, whereas SVN is a centralized version control system.
+
+In Git, every developer has a local copy of the repository and its history.
+
+In SVN, developers generally depend on a central repository for version history and operations.
+
+Git supports easier branching and merging, which makes it very useful for modern development teams.
+
+## 2. Important Git commands
+
+### Q6. What are the commonly used Git commands?
+
+These are the commands I regularly use in development.
+
+| Git command | Purpose |
+| --- | --- |
+| `git init` | Initialize repository |
+| `git clone URL` | Clone remote repository |
+| `git status` | Check file changes |
+| `git add .` | Stage changes |
+| `git commit -m "message"` | Commit changes |
+| `git push` | Push commits to remote |
+| `git pull` | Fetch and integrate changes |
+| `git fetch` | Download remote updates |
+| `git branch` | List branches |
+| `git checkout branch` | Switch branch |
+| `git switch branch` | Switch branch |
+| `git merge branch` | Merge another branch |
+| `git log` | View commit history |
+| `git diff` | Compare changes |
+| `git stash` | Temporarily save changes |
+| `git reset` | Move HEAD and optionally modify staging |
+| `git revert` | Create a commit that undoes another commit |
+
+### Q7. Explain the Git workflow.
+
+Spoken answer:
+
+In our project, whenever I make changes to the application, I follow a standard Git workflow.
+
+First, I check the current status using `git status`.
+
+Then I stage the modified files using `git add`.
+
+After that, I commit the changes with a meaningful commit message.
+
+Finally, I push the committed changes to the remote GitHub repository.
+
+For example:
+
+bash
+
+```bash
+git status
+
+git add .
+
+git commit -m "Added employee API"
+
+git push origin feature/employee-api
+```
+
+After pushing, I create a pull request for code review.
+
+### Q8. What is the difference between git add, git commit, and git push?
+
+Spoken answer:
+
+These are three different steps.
+
+- `git add` moves the modified files into the staging area.
+- `git commit` saves the staged changes in the local repository.
+- `git push` uploads the local commits to the remote repository.
+
+For example, after completing an API development task, I stage my changes, commit them, and push them to GitHub.
+
+### Q9. What is git clone?
+
+Git clone is used to download an existing remote repository into our local machine.
+
+For example:
+
+bash
+
+```bash
+git clone https://github.com/company/project.git
+```
+
+In our project, when a new developer joins the team, we share the GitHub repository URL, and they clone the project to their local machine.
+
+### Q10. What is the difference between git fetch and git pull?
+
+Spoken answer:
+
+Both commands are used to get the latest changes from the remote repository.
+
+The difference is that `git fetch` downloads the remote changes but does not automatically integrate them into my current branch.
+
+Whereas `git pull` fetches the remote changes and integrates them into my current branch.
+
+I generally use fetch when I want to review the remote changes before merging them into my working branch.
+
+## 3. Git branching and merging
+
+### Q11. What is a branch in Git?
+
+A branch is an independent line of development.
+
+In our project, we don't allow every developer to directly modify the main branch.
+
+Instead, we create separate branches for different features or bug fixes.
+
+For example:
+
+text
+
+```text
+main
+  |
+  |---- develop
+           |
+           |---- feature/login
+           |
+           |---- feature/employee
+           |
+           |---- bugfix/api-error
+```
+
+After development and testing, we create pull requests and merge the changes into the appropriate branch.
+
+### Q12. What is the difference between main, develop, and feature branches?
+
+Spoken answer:
+
+In our project, we follow a branch-based development strategy.
+
+- Main branch contains production-ready code.
+- Develop branch contains the latest integrated development changes.
+- Feature branches are created for individual tasks or functionalities.
+
+For example, if I am developing an employee management API, I create a feature branch, complete the development, test it, and raise a pull request to merge it into the develop branch.
+
+### Q13. What is git merge?
+
+Git merge is used to combine changes from one branch into another branch.
+
+For example, after completing the login functionality, I switch to the develop branch and merge the feature branch.
+
+bash
+
+```bash
+git switch develop
+
+git merge feature/login
+```
+
+This integrates the login feature into the develop branch.
+
+### Q14. What is a merge conflict?
+
+A merge conflict occurs when Git cannot automatically combine changes from different branches.
+
+For example, two developers modify the same section of the same file.
+
+When we try to merge their changes, Git may report a conflict.
+
+We manually review the conflicting code, decide which changes should be retained, remove the conflict markers, test the application, and complete the merge.
+
+### Q15. How do you resolve a merge conflict?
+
+Spoken answer:
+
+First, I check which files have conflicts using `git status`.
+
+Then I open those files in Visual Studio or VS Code.
+
+Git highlights the conflicting sections.
+
+I discuss the changes with the other developer if necessary and decide which code should be retained.
+
+After resolving the conflict, I stage the resolved files and complete the merge commit if required.
+
+Example:
+
+bash
+
+```bash
+git status
+
+# Resolve the conflicting files
+
+git add .
+
+git commit -m "Resolved merge conflict"
+```
+
+### Q16. What is the difference between merge and rebase?
+
+Git Merge vs Git Rebase (A Beginner Perspective) | by Arya | Feb, 2026 | Medium
+
+[arvita-writes.medium.com](<https://arvita-writes.medium.com/git-merge-vs-git-rebase-a-beginner-perspective-f91f44ed1c74?utm_source=chatgpt.com>)
+
+Spoken answer:
+
+Both merge and rebase are used to integrate changes from different branches.
+
+Merge combines the changes and can create a merge commit.
+
+Rebase moves or replays my branch commits on top of another branch, creating a more linear commit history.
+
+In our project, we use merge for integrating feature branches through pull requests.
+
+Rebase can be useful for updating a feature branch with the latest develop branch changes.
+
+One important thing is that we should avoid rebasing shared branches because it rewrites commit history.
+
+## 4. GitHub and pull request questions
+
+### Q17. What is a pull request?
+
+A pull request is a request to merge changes from one branch into another branch.
+
+In our project, after completing a feature, I push my branch to GitHub and create a pull request.
+
+Other developers review my code, provide comments, and suggest improvements.
+
+After the required approvals and successful checks, the pull request is merged into the target branch.
+
+### Q18. What is a code review?
+
+Code review is the process of reviewing another developer's code before merging it into the main development branch.
+
+In our project, reviewers check:
+
+- Code quality.
+- Coding standards.
+- Business logic.
+- Security issues.
+- Performance.
+- Unit test coverage.
+- Unnecessary or duplicate code.
+
+After the review comments are addressed, the code is approved and merged.
+
+### Q19. What is a GitHub webhook?
+
+A GitHub webhook automatically sends an event notification to an external system when something happens in the repository.
+
+For example, in our project, we configure a webhook between GitHub and Jenkins.
+
+Whenever a developer pushes code into GitHub, GitHub sends an event notification to Jenkins.
+
+Jenkins receives the notification and triggers the CI/CD pipeline.
+
+### Q20. What is the difference between GitHub and GitHub Actions?
+
+GitHub is the platform used to host repositories and collaborate on code.
+
+GitHub Actions is an automation and CI/CD service within GitHub.
+
+In our project, we use Jenkins for CI/CD, but GitHub stores our source code and triggers Jenkins through webhooks.
+
+## 5. Advanced Git interview questions
+
+### Q21. What is git stash?
+
+Git stash temporarily saves our uncommitted changes without creating a commit.
+
+For example, suppose I'm working on an employee API, and suddenly I need to fix a production bug.
+
+I don't want to commit my incomplete feature.
+
+So I use git stash to temporarily save my changes, switch to the bug-fix branch, and complete the urgent task.
+
+After that, I return to my feature branch and restore the saved changes.
+
+bash
+
+```bash
+git stash
+
+git switch bugfix/login
+
+# Fix the issue
+
+git switch feature/employee
+
+git stash pop
+```
+
+### Q22. What is the difference between git reset and git revert?
+
+This is a very common interview question.
+
+| Git reset | Git revert |
+| --- | --- |
+| Moves the branch pointer to an earlier commit | Creates a new commit that undoes an earlier commit |
+| Can rewrite local history | Preserves existing history |
+| Can change staging and working files | Normally leaves existing history intact |
+| Use carefully on shared branches | Safer for shared branches |
+
+Spoken answer:
+
+Git reset is generally used when I want to move my local branch back to an earlier commit.
+
+Git revert is used when I want to undo an existing commit without deleting the previous commit history.
+
+In a shared production branch, I prefer revert because it preserves the history and clearly records the rollback.
+
+### Q23. What is git cherry-pick?
+
+Git cherry-pick allows us to take a specific commit from one branch and apply it to another branch.
+
+For example, suppose a bug fix is completed in the develop branch, but the same fix is urgently required in the release branch.
+
+Instead of merging the entire develop branch, we can cherry-pick only the required commit.
+
+bash
+
+```bash
+git cherry-pick COMMIT_ID
+```
+
+### Q24. What is HEAD in Git?
+
+HEAD is a reference that indicates the current position in our Git repository, normally pointing to the current branch's latest commit.
+
+For example, when I switch from the develop branch to the feature branch, HEAD points to the feature branch.
+
+### Q25. What is .gitignore?
+
+`.gitignore` is a file that specifies files and folders Git should ignore when detecting untracked files.
+
+In our .NET project, we add entries such as:
+
+text
+
+```text
+bin/
+obj/
+.vs/
+*.user
+.env
+appsettings.Development.json
+```
+
+This prevents unnecessary build files and local development configuration from being committed.
+
+We must ensure sensitive configuration is not already tracked, because adding it to `.gitignore` does not remove it from Git history.
+
+### Q26. What is a Git tag?
+
+A Git tag is used to identify a specific commit, often representing a release version.
+
+For example, after deploying our .NET application to production, we can create a release tag:
+
+bash
+
+```bash
+git tag v1.0.0
+
+git push origin v1.0.0
+```
+
+This helps us identify which source code version was released.
+
+### Q27. What is a fork in GitHub?
+
+A fork is a copy of someone else's repository under our own GitHub account or organization.
+
+It is commonly used in open-source development.
+
+We make changes in our fork and submit a pull request to the original repository.
+
+## 6. Real-time Git and GitHub scenarios
+
+These are particularly important for someone working on a .NET development and AWS deployment project.
+
+### Q28. Two developers modify the same file. What will you do?
+
+Spoken answer:
+
+If two developers modify the same file, we may encounter a merge conflict when integrating their branches.
+
+First, I communicate with the other developer and understand the changes.
+
+Then I compare both versions, resolve the conflict, and test the application.
+
+Once everything is working correctly, I commit the resolved changes and complete the merge.
+
+### Q29. You accidentally committed the wrong code. What will you do?
+
+Spoken answer:
+
+First, I identify the incorrect commit.
+
+If the commit is already pushed to a shared branch, I generally use git revert to undo the changes safely.
+
+If the commit is only in my local branch and hasn't been shared, I can use git reset when appropriate.
+
+Before taking action, I check whether other developers are already depending on that commit.
+
+### Q30. You pushed sensitive information such as a password to GitHub. What will you do?
+
+Spoken answer:
+
+First, I immediately revoke or rotate the exposed credential because deleting the file alone does not make the credential safe.
+
+Then I remove the secret from the repository and, if necessary, clean the Git history.
+
+I also check whether the exposed credential was accessed or used.
+
+In our AWS project, we avoid storing passwords, AWS access keys, and database credentials in GitHub.
+
+We use AWS Secrets Manager and IAM roles for secure access.
+
+### Q31. How do you maintain code quality in GitHub?
+
+In our project, we follow a pull request-based development process.
+
+Developers work on feature branches and raise pull requests.
+
+We configure mandatory code reviews, branch protection rules, and automated build and test checks.
+
+Only after the required checks and approvals are completed do we merge the changes into the protected branch.
+
+### Q32. How does GitHub integrate with Jenkins in your project?
+
+🚀 Jenkins Fundamentals: Simplified with Real-Life Examples & Pipelines
+
+[linkedin.com](<https://www.linkedin.com/pulse/jenkins-fundamentals-simplified-real-life-examples-pipelines-singh-pxjwc?utm_source=chatgpt.com>)
+
+Spoken answer:
+
+In our project, GitHub is used for source code management and Jenkins is used for continuous integration and deployment.
+
+Whenever a developer pushes code into GitHub, a webhook triggers the Jenkins pipeline.
+
+Jenkins checks out the latest source code and performs the build and unit testing.
+
+After successful validation, Jenkins creates Docker images for our .NET frontend and backend applications.
+
+Then Jenkins pushes those images into Amazon ECR.
+
+Finally, our deployment process updates the Docker containers running on EC2.
+
+So GitHub manages our source code, and Jenkins automates the build and deployment process.
+
+## 7. Git branching strategy used in a real-time project
+
+Here is a simple example of how your project can organize its branches.
+
+main
+
+Production-ready code
+
+develop
+
+Integrated development code
+
+feature/login
+
+Login API
+
+feature/employee
+
+Employee API
+
+bugfix/payment
+
+Bug fixing
+
+Typical workflow:
+
+1. Developer creates a feature branch from develop.
+2. Developer implements the functionality.
+3. Developer commits and pushes changes to GitHub.
+4. Developer raises a pull request.
+5. The team reviews and approves the code.
+6. Changes are merged into develop.
+7. After testing, release changes are merged into main.
+8. Jenkins deploys the approved release.
+
+## 8. Practical Git commands – Quick revision
+
+## Git command cheat sheet
+
+Initialize repository
+
+git init
+
+Clone repository
+
+git clone URL
+
+Check current changes
+
+git status
+
+Stage changes
+
+git add .
+
+Commit changes
+
+git commit -m "message"
+
+Push to GitHub
+
+git push origin branch
+
+Fetch and integrate changes
+
+git pull origin branch
+
+Fetch remote updates
+
+git fetch origin
+
+List branches
+
+git branch
+
+Create and switch branch
+
+git switch -c feature/login
+
+Merge branch
+
+git merge develop
+
+Save uncommitted changes
+
+git stash
+
+Restore stashed changes
+
+git stash pop
+
+View commit history
+
+git log --oneline
+
+Compare changes
+
+git diff
+
+Undo commit safely
+
+git revert COMMIT\_ID
+
+Apply specific commit
+
+git cherry-pick COMMIT\_ID
+
+Create release tag
+
+git tag v1.0.0
+
+## 9. Top 15 Git and GitHub questions to prepare
+
+| No. | Question |
+| --- | --- |
+| 1 | What is Git? |
+| 2 | What is GitHub? |
+| 3 | Difference between Git and GitHub? |
+| 4 | What is a Git repository? |
+| 5 | Explain Git workflow. |
+| 6 | Difference between fetch and pull? |
+| 7 | What is branching? |
+| 8 | What is merge conflict? |
+| 9 | How do you resolve merge conflicts? |
+| 10 | Difference between merge and rebase? |
+| 11 | What is a pull request? |
+| 12 | What is git stash? |
+| 13 | Difference between reset and revert? |
+| 14 | What is cherry-pick? |
+| 15 | How does GitHub integrate with Jenkins? |
+
+## 10. Mock interview practice
+
+Try answering these five questions yourself.
+
+Git & GitHub quiz
+
+5/5 answered
+
+1. What is the main difference between Git and GitHub?
+
+0 Git is a version control system; GitHub hosts Git repositories.
+
+Git and GitHub are exactly the same.
+
+GitHub is a programming language.
+
+CorrectGit manages version history; GitHub provides remote hosting and collaboration.
+
+2. Which command saves changes into the local Git repository?
+
+git push
+
+1 git commit
+
+git fetch
+
+Correctgit commit records staged changes in the local repository.
+
+3. What is used to request merging a feature branch into develop on GitHub?
+
+0 Pull request
+
+Docker image
+
+Git tag
+
+CorrectA pull request allows review and approval before merging.
+
+4. Which command safely undoes an already shared commit?
+
+0 git revert
+
+git reset --hard
+
+git clean
+
+CorrectRevert creates a new commit that reverses the selected commit.
+
+5. How does Jenkins know that new code was pushed to GitHub?
+
+RDS trigger
+
+1 GitHub webhook
+
+Docker volume
+
+CorrectGitHub sends an event notification to Jenkins through the webhook.
+
+ Submit answers # Your score: 5/5
+
+ Retry quiz
+
+Final interview tip: When the interviewer asks about Git and GitHub, don't stop with definitions. Explain your actual workflow:
+
+"Developer creates a feature branch → writes .NET code → commits changes → pushes to GitHub → raises pull request → code review → merge → Jenkins webhook triggers → Docker image build → push to ECR → deploy to EC2."
+
+That one explanation connects Git, GitHub, Jenkins, Docker, and AWS into a complete real-time project scenario.

@@ -1,0 +1,1072 @@
+# Linux Interview Questions and Answers – Spoken English Style
+
+Let's prepare Linux interview questions from basic to advanced, with real-time project scenarios.
+
+I'll connect the questions to your existing project architecture:
+
+- ASP.NET Core Web API (.NET 8)
+- React.js / ASP.NET Core MVC
+- Docker containers
+- Amazon EC2
+- Amazon ECR
+- AWS Application Load Balancer
+- Amazon RDS SQL Server
+- Jenkins CI/CD
+- Amazon CloudWatch
+
+These questions are useful for .NET developers, AWS developers, DevOps engineers, and production support interviews.
+
+## 1\. Linux fundamentals
+
+### Q1. What is Linux?
+
+Spoken answer:
+
+Linux is an open-source operating system. It is widely used in servers, cloud computing, application hosting, and DevOps environments.
+
+In our project, we use Linux-based Amazon EC2 instances to host Docker containers.
+
+We connect to the Linux EC2 instances using SSH and execute commands to manage Docker containers, check application logs, monitor server resources, and troubleshoot deployment issues.
+
+### Q2. What is the difference between Linux and Windows?
+
+Spoken answer:
+
+Linux and Windows are both operating systems.
+
+The main difference is that Linux is open-source, whereas Windows is a proprietary operating system.
+
+Linux is widely used in cloud infrastructure and server environments because it is lightweight, flexible, and supports powerful command-line tools.
+
+Windows provides a graphical interface and is commonly used for desktop applications and Windows-specific workloads.
+
+In our AWS project, we use Linux EC2 instances to host Docker containers running our .NET 8 applications.
+
+### Q3. What is a Linux kernel?
+
+The kernel is the core component of the Linux operating system.
+
+It manages hardware resources, memory, CPU scheduling, processes, and communication between software and hardware.
+
+For example, when our .NET application runs inside a Docker container, the container uses the host Linux kernel.
+
+### Q4. What is a Linux shell?
+
+A shell is a command-line interface that allows users to interact with the Linux operating system.
+
+We execute commands through the shell to manage files, directories, processes, permissions, and services.
+
+For example, we use Bash shell to execute Linux commands on our AWS EC2 instances.
+
+### Q5. What is SSH?
+
+SSH stands for Secure Shell.
+
+It is a protocol used to securely connect to remote Linux servers.
+
+In our project, we use SSH to connect to Linux EC2 instances.
+
+Example:
+
+bash
+
+```bash
+ssh -i mykey.pem ec2-user@EC2_PUBLIC_IP
+```
+
+Here:
+
+- `-i` specifies the private key file.
+- `ec2-user` is the login username for many Amazon Linux AMIs.
+- The IP address identifies the remote server.
+
+For production private instances, we can use AWS Systems Manager Session Manager instead of exposing SSH access.
+
+## 2\. Important Linux commands
+
+These commands are very important for technical interviews and real-time project work.
+
+### Q6. What are the commonly used Linux commands?
+
+| Command | Purpose |
+| --- | --- |
+| `pwd` | Display current directory |
+| `ls` | List files and folders |
+| `ls -l` | Display detailed file information |
+| `ls -la` | Show hidden files also |
+| `cd` | Change directory |
+| `mkdir` | Create directory |
+| `rmdir` | Remove empty directory |
+| `touch` | Create empty file |
+| `cat` | Display file contents |
+| `less` | View file contents page by page |
+| `head` | Display first lines |
+| `tail` | Display last lines |
+| `cp` | Copy files |
+| `mv` | Move or rename files |
+| `rm` | Remove files |
+| `find` | Search files and directories |
+| `grep` | Search text patterns |
+| `clear` | Clear terminal |
+| `whoami` | Display current username |
+| `date` | Display system date and time |
+
+### Q7. What is the difference between `ls` and `ls -la`?
+
+Spoken answer:
+
+The `ls` command displays files and directories in the current location.
+
+Whereas `ls -la` displays detailed information, including hidden files.
+
+In Linux, hidden files usually start with a dot.
+
+For example, `.env` and `.gitignore` are hidden files.
+
+### Q8. How do you check the current working directory?
+
+We use the `pwd` command.
+
+bash
+
+```bash
+pwd
+```
+
+It displays the full path of the directory where we are currently working.
+
+### Q9. How do you create a directory and a file?
+
+We use `mkdir` to create a directory and `touch` to create an empty file.
+
+bash
+
+```bash
+mkdir myproject
+
+cd myproject
+
+touch app.log
+```
+
+### Q10. How do you view application logs in Linux?
+
+Spoken answer:
+
+In our project, whenever we face an application issue, the first thing I do is check the application logs.
+
+We use commands like `cat`, `less`, and `tail`.
+
+For example:
+
+bash
+
+```bash
+tail -f app.log
+```
+
+This continuously displays new log entries.
+
+If our .NET application runs inside Docker, we can also check its logs using:
+
+bash
+
+```bash
+docker logs -f myapi
+```
+
+This helps us identify application startup errors, database connection failures, and runtime exceptions.
+
+### Q11. What is the difference between `cat`, `less`, and `tail`?
+
+- `cat` displays the complete file contents.
+- `less` allows us to read a file page by page.
+- `tail` displays the last lines of a file.
+
+For example, if I want to continuously monitor application logs, I use `tail -f`.
+
+## 3\. Linux file permissions
+
+### Q12. What are Linux file permissions?
+
+Linux provides file permissions to control who can read, write, and execute files.
+
+There are three main permission categories:
+
+- User – File owner.
+- Group – Users belonging to the group.
+- Others – Everyone else.
+
+There are three basic permissions:
+
+| Permission | Symbol | Numeric value |
+| --- | --- | --- |
+| Read | r | 4 |
+| Write | w | 2 |
+| Execute | x | 1 |
+
+### Q13. What is chmod?
+
+`chmod` is used to change file permissions.
+
+For example:
+
+bash
+
+```bash
+chmod 755 deploy.sh
+```
+
+This means:
+
+- Owner gets read, write, and execute permissions.
+- Group gets read and execute permissions.
+- Others get read and execute permissions.
+
+Spoken answer:
+
+In our project, when we create deployment scripts in Linux, sometimes we need to provide execution permission.
+
+For that, we use chmod.
+
+For example, we execute `chmod +x deploy.sh` to make the script executable.
+
+### Q14. What is chown?
+
+`chown` is used to change the ownership of files and directories.
+
+Example:
+
+bash
+
+```bash
+sudo chown ec2-user:ec2-user app.log
+```
+
+Here, we change the owner and group of the file.
+
+### Q15. What is the difference between chmod and chown?
+
+`chmod` changes file permissions, whereas `chown` changes file ownership.
+
+For example, if a deployment script doesn't have execution permission, we use chmod.
+
+If a file belongs to the wrong user, we use chown.
+
+### Q16. What does chmod 777 mean?
+
+It gives read, write, and execute permissions to the owner, group, and others.
+
+Spoken answer:
+
+We should avoid using chmod 777 in production because it provides excessive permissions.
+
+Instead, we should follow the principle of least privilege and provide only the permissions required by the application.
+
+## 4\. Linux process and service management
+
+### Q17. What is a process in Linux?
+
+A process is a running instance of a program.
+
+For example, when we start our .NET application, the operating system creates a process to execute it.
+
+Each process has a unique process ID called PID.
+
+### Q18. How do you check running processes?
+
+We use:
+
+bash
+
+```bash
+ps -ef
+```
+
+It displays running processes.
+
+We can also use:
+
+bash
+
+```bash
+top
+```
+
+This provides real-time information about CPU and memory utilization.
+
+### Q19. What is the difference between ps and top?
+
+`ps` displays a snapshot of currently running processes.
+
+`top` continuously updates process information, including CPU and memory usage.
+
+In our project, when an EC2 instance experiences high CPU utilization, I use top to identify which process is consuming resources.
+
+### Q20. What is a PID?
+
+PID stands for Process ID.
+
+Every running process in Linux receives a unique process identifier.
+
+We can find the process ID using:
+
+bash
+
+```bash
+ps -ef
+```
+
+### Q21. How do you stop a process in Linux?
+
+We use the `kill` command with the process ID.
+
+bash
+
+```bash
+kill PID
+```
+
+It normally sends a termination signal.
+
+If the process doesn't stop gracefully, there are stronger termination signals, but we should use them carefully.
+
+### Q22. What is systemctl?
+
+`systemctl` is used to manage services on systems that use systemd.
+
+For example:
+
+bash
+
+```bash
+sudo systemctl status docker
+
+sudo systemctl start docker
+
+sudo systemctl restart docker
+
+sudo systemctl enable docker
+```
+
+Spoken answer:
+
+In our AWS environment, we use systemctl to check and manage services.
+
+For example, if Docker is not running on the EC2 instance, I check its status using `systemctl status docker`.
+
+If required, I start or restart the service.
+
+### Q23. What is the difference between start, stop, restart, and enable?
+
+| Command | Meaning |
+| --- | --- |
+| `systemctl start` | Start service now |
+| `systemctl stop` | Stop service |
+| `systemctl restart` | Restart service |
+| `systemctl enable` | Start automatically at boot |
+| `systemctl status` | Check service status |
+
+## 5\. Linux networking commands
+
+These are very important for AWS and production troubleshooting.
+
+### Q24. How do you check the IP address of a Linux server?
+
+We use:
+
+bash
+
+```bash
+ip addr
+```
+
+It displays network interfaces and their IP addresses.
+
+### Q25. How do you check network connectivity?
+
+We use the `ping` command.
+
+bash
+
+```bash
+ping example.com
+```
+
+It helps us check whether the destination responds to network connectivity tests.
+
+However, some servers block ICMP, so a failed ping doesn't always mean the service is unavailable.
+
+### Q26. What is netstat?
+
+`netstat` is a network troubleshooting utility used to display network connections, listening ports, and routing information.
+
+Example:
+
+bash
+
+```bash
+netstat -tuln
+```
+
+On modern Linux systems, `ss` is generally preferred.
+
+bash
+
+```bash
+ss -tuln
+```
+
+### Q27. How do you check whether port 8080 is listening?
+
+We use:
+
+bash
+
+```bash
+sudo ss -tulnp | grep 8080
+```
+
+This helps us identify whether an application is listening on port 8080.
+
+Real-time example:
+
+Suppose our .NET 8 API is running inside a Docker container, but users cannot access it.
+
+First, I verify whether the container is running.
+
+Then I check the port mapping and whether the application is listening on the expected port.
+
+After that, I verify the EC2 security group and ALB target group configuration.
+
+### Q28. What is curl?
+
+Curl is a command-line tool used to send HTTP requests and communicate with APIs and web services.
+
+For example:
+
+bash
+
+```bash
+curl http://localhost:8080/health
+```
+
+In our project, we use curl to verify whether the .NET API is responding correctly.
+
+To inspect response headers:
+
+bash
+
+```bash
+curl -I https://myapplication.com
+```
+
+### Q29. What is wget?
+
+Wget is a command-line utility used to download files from web servers.
+
+For example:
+
+bash
+
+```bash
+wget https://example.com/file.zip
+```
+
+The main difference is that curl is widely used for API testing and HTTP communication, while wget is commonly used for downloading files.
+
+### Q30. How do you check DNS resolution?
+
+We use:
+
+bash
+
+```bash
+nslookup myapplication.com
+```
+
+Or:
+
+bash
+
+```bash
+dig myapplication.com
+```
+
+This helps us verify whether a domain name resolves to the expected IP address.
+
+## 6\. Linux disk and memory management
+
+### Q31. How do you check disk space?
+
+We use:
+
+bash
+
+```bash
+df -h
+```
+
+This displays disk space in a human-readable format.
+
+Spoken answer:
+
+In our project, if Docker deployment fails because the EC2 disk is full, I first check disk utilization using df -h.
+
+Then I investigate unnecessary files, old logs, and unused Docker images.
+
+### Q32. How do you check directory size?
+
+We use:
+
+bash
+
+```bash
+du -sh /var/log
+```
+
+This displays the total size of the specified directory.
+
+### Q33. How do you check memory utilization?
+
+We use:
+
+bash
+
+```bash
+free -h
+```
+
+It displays total, used, and available memory.
+
+We can also use:
+
+bash
+
+```bash
+top
+```
+
+### Q34. How do you check CPU utilization?
+
+We use:
+
+bash
+
+```bash
+top
+```
+
+Or:
+
+bash
+
+```bash
+uptime
+```
+
+For more detailed process-level monitoring, we can use `top` or `htop` if installed.
+
+### Q35. What is swap memory?
+
+Swap memory is disk space used as an extension of physical RAM.
+
+When physical memory is under pressure, Linux can move less frequently used memory pages to swap space.
+
+However, swap is much slower than RAM.
+
+## 7\. Linux shell scripting
+
+### Q36. What is a shell script?
+
+A shell script is a file containing multiple Linux commands that execute automatically in sequence.
+
+In our project, we can create shell scripts to automate application deployment, Docker image pulling, container management, and log cleanup.
+
+Example:
+
+bash
+
+```bash
+#!/bin/bash
+
+echo "Starting deployment"
+
+docker pull myapi:v1
+
+docker stop myapi || true
+
+docker rm myapi || true
+
+docker run -d \
+  --name myapi \
+  -p 8080:8080 \
+  myapi:v1
+
+echo "Deployment completed"
+```
+
+This is a simplified example. A production deployment should include health checks and rollback handling rather than simply replacing a working container.
+
+### Q37. What is a cron job?
+
+A cron job is used to schedule commands or scripts to run automatically at specific times.
+
+For example, if we want to execute a log cleanup script every day at midnight, we can configure a cron job.
+
+We edit the cron schedule using:
+
+bash
+
+```bash
+crontab -e
+```
+
+Example schedule:
+
+bash
+
+```bash
+0 0 * * * /home/ec2-user/cleanup.sh
+```
+
+This runs the script every day at midnight, according to the server's configured timezone.
+
+### Q38. What is the difference between Bash and Shell?
+
+Shell is a general term for a command interpreter.
+
+Bash stands for Bourne Again Shell. It is one particular type of shell.
+
+Linux supports different shells, such as Bash, Zsh, and Dash.
+
+### Q39. What is an environment variable?
+
+An environment variable is a variable that stores configuration information accessible to processes.
+
+For example:
+
+bash
+
+```bash
+export ASPNETCORE_ENVIRONMENT=Production
+```
+
+In our .NET application, we use environment variables to configure application environments and other runtime settings.
+
+We avoid putting passwords or sensitive credentials directly into shell scripts.
+
+## 8\. Linux + Docker + AWS interview questions
+
+These are the most important questions for your current technology stack.
+
+### Q40. How do you connect to a Linux EC2 instance?
+
+Deploy a LAMP Stack Website on a Ubuntu Server | by George Baidoo Jr. | Medium
+
+[medium.com](<https://medium.com/%40GeorgeBaidooJr/deploy-a-lamp-stack-website-in-aws-cloud-bc693344553d?utm_source=chatgpt.com>)
+
+Spoken answer:
+
+First, we launch a Linux EC2 instance in AWS.
+
+We configure the required network access and authentication.
+
+Then we connect to the instance using SSH and the appropriate private key.
+
+For example, for an Amazon Linux instance, we use the ec2-user username.
+
+After connecting, we can execute Linux commands to install Docker, manage containers, check logs, and troubleshoot application issues.
+
+### Q41. How do you install Docker on a Linux EC2 instance?
+
+Spoken answer:
+
+First, I connect to the EC2 instance.
+
+Then I install Docker using the package manager supported by that Linux distribution.
+
+After installation, I start the Docker service and enable it to start automatically when the instance reboots.
+
+Finally, I verify the Docker installation by checking the Docker version and service status.
+
+For example, on Amazon Linux 2023:
+
+bash
+
+```bash
+sudo dnf install docker -y
+
+sudo systemctl start docker
+
+sudo systemctl enable docker
+
+docker --version
+
+sudo systemctl status docker
+```
+
+### Q42. How do you check running Docker containers in Linux?
+
+We use:
+
+bash
+
+```bash
+docker ps
+```
+
+To check all containers, including stopped containers:
+
+bash
+
+```bash
+docker ps -a
+```
+
+### Q43. How do you troubleshoot a Docker container that is not running?
+
+Spoken answer:
+
+First, I check the container status using `docker ps -a`.
+
+Then I check the container logs using `docker logs`.
+
+If the container is stopped, I inspect the exit code and container configuration.
+
+I also verify whether the issue is related to the application startup, missing environment variables, port configuration, or database connectivity.
+
+After identifying the issue, I fix it and redeploy the container.
+
+### Q44. How do you check Docker disk usage?
+
+We use:
+
+bash
+
+```bash
+docker system df
+```
+
+This displays Docker disk usage, including images, containers, volumes, and build cache.
+
+### Q45. How do you check Docker resource utilization?
+
+We use:
+
+bash
+
+```bash
+docker stats
+```
+
+It displays real-time CPU, memory, network, and block I/O statistics for running containers.
+
+### Q46. How do you troubleshoot a .NET application running inside Docker on EC2?
+
+Spoken answer:
+
+In our project, if the .NET API is not responding, I follow a step-by-step troubleshooting approach.
+
+First, I connect to the Linux EC2 instance.
+
+Then I check whether the Docker container is running using `docker ps`.
+
+Next, I check the container logs using `docker logs`.
+
+After that, I verify the application port using the `ss` command.
+
+I also check the container environment variables and database connection settings.
+
+Finally, I verify the EC2 security groups, Application Load Balancer target health, and RDS connectivity.
+
+This helps me identify whether the issue is coming from the application, Docker, Linux, or AWS networking.
+
+## 9\. Real-time production troubleshooting scenarios
+
+| Interview scenario | Commands to use |
+| --- | --- |
+| EC2 server CPU is high | `top`, `uptime` |
+| Disk space is full | `df -h`, `du -sh` |
+| Application logs are not updating | `tail -f`, `docker logs` |
+| Docker service is stopped | `systemctl status docker` |
+| API port is not listening | `ss -tulnp` |
+| Application is not reachable | `curl`, `ping` |
+| DNS is not resolving | `nslookup`, `dig` |
+| Container is consuming high memory | `docker stats`, `free -h` |
+| Process is stuck | `ps -ef`, `top` |
+| File permission issue | `ls -l`, `chmod` |
+| Application cannot access files | `ls -l`, `chown` |
+| Jenkins deployment script fails | `bash -x`, inspect Jenkins logs |
+
+## 10\. Complete Linux troubleshooting example
+
+Let's take a real-time scenario.
+
+Interviewer: Your .NET 8 API is deployed inside a Docker container on AWS EC2, but the application is not accessible. How will you troubleshoot?
+
+Spoken answer:
+
+First, I connect to the Linux EC2 instance using SSH or AWS Systems Manager.
+
+Then I check whether Docker is running.
+
+bash
+
+```bash
+sudo systemctl status docker
+```
+
+Next, I check whether our API container is running.
+
+bash
+
+```bash
+docker ps -a
+```
+
+If the container is stopped, I check its logs.
+
+bash
+
+```bash
+docker logs myapi
+```
+
+Then I verify whether the application port is listening.
+
+bash
+
+```bash
+sudo ss -tulnp | grep 8080
+```
+
+After that, I test the API locally from the EC2 instance.
+
+bash
+
+```bash
+curl http://localhost:8080/health
+```
+
+If the local API is working, I check the Docker port mapping, EC2 security groups, and Application Load Balancer target group health.
+
+I also verify the RDS database connectivity if the application is reporting database errors.
+
+Finally, I check CloudWatch logs and metrics to identify the root cause.
+
+Based on the issue, I fix the configuration or application problem and verify that the API is accessible again.
+
+## 11\. Linux command cheat sheet – Practice
+
+Here is a quick revision sheet you can use before interviews.
+
+## Linux command revision
+
+Current directory
+
+pwd
+
+List all files including hidden files
+
+ls -la
+
+Change directory
+
+cd /var/log
+
+Create directory
+
+mkdir app
+
+Create file
+
+touch app.log
+
+Display file
+
+cat app.log
+
+Monitor logs
+
+tail -f app.log
+
+Search errors
+
+grep -i error app.log
+
+Find log files
+
+find /var/log -name '\*.log'
+
+Make script executable
+
+chmod +x deploy.sh
+
+Change file ownership
+
+chown user:group app.log
+
+List processes
+
+ps -ef
+
+Monitor CPU and memory
+
+top
+
+Check memory
+
+free -h
+
+Check disk space
+
+df -h
+
+Check directory size
+
+du -sh /var/log
+
+Check IP addresses
+
+ip addr
+
+Check listening ports
+
+ss -tulnp
+
+Test API endpoint
+
+curl localhost:8080/health
+
+Check Docker service
+
+systemctl status docker
+
+List containers
+
+docker ps -a
+
+Monitor container logs
+
+docker logs -f myapi
+
+Monitor container resources
+
+docker stats
+
+Check Docker service logs
+
+journalctl -u docker
+
+List scheduled cron jobs
+
+crontab -l
+
+25 commands found
+
+## 12\. Linux mock interview – Test yourself
+
+Linux technical quiz
+
+7/7 answered
+
+1. Which command is used to check disk space?
+
+free -h
+
+1 df -h
+
+top
+
+Correctdf -h displays filesystem disk utilization.
+
+2. Which command continuously monitors application logs?
+
+0 tail -f
+
+mkdir
+
+chmod
+
+Correcttail -f displays new log entries as they arrive.
+
+3. Which command checks running Docker containers?
+
+docker images
+
+1 docker ps
+
+docker build
+
+Correctdocker ps displays currently running containers.
+
+4. Which command checks listening network ports?
+
+0 ss -tulnp
+
+pwd
+
+touch
+
+Correctss displays socket information and listening ports.
+
+5. Which command manages services on systemd Linux?
+
+grep
+
+1 systemctl
+
+curl
+
+Correctsystemctl starts, stops, enables, and checks system services.
+
+6. Which command changes file permissions?
+
+chown
+
+1 chmod
+
+cat
+
+Correctchmod changes read, write, and execute permissions.
+
+7. Which command checks memory usage?
+
+0 free -h
+
+df -h
+
+ip addr
+
+Correctfree -h displays RAM and swap usage.
+
+ Submit answers # Your score: 7/7
+
+ Try again
+
+## 13\. Top 15 Linux interview questions to prepare first
+
+1. What is Linux?
+2. What is SSH?
+3. What are the basic Linux commands?
+4. What is the difference between `grep` and `find`?
+5. What is chmod and chown?
+6. How do you check running processes?
+7. How do you check CPU and memory utilization?
+8. How do you check disk space?
+9. What is systemctl?
+10. How do you check application logs?
+11. What is a shell script?
+12. What is a cron job?
+13. How do you check listening ports?
+14. How do you troubleshoot a Docker container?
+15. How do you troubleshoot a .NET application running on Linux EC2?
+
+My interview tip: For your project, concentrate especially on Linux commands related to Docker, application logs, networking, permissions, and server monitoring.
+
+A good real-time explanation to remember is:
+
+"Whenever we deploy our .NET 8 application on AWS EC2, I connect to the Linux server, check the Docker service, verify the running containers, monitor application logs, check port connectivity, and troubleshoot any issues. We also use CloudWatch to monitor infrastructure and application performance."
+
+This connects your Linux knowledge directly to your .NET + Docker + AWS project.

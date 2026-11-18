@@ -82,6 +82,11 @@ function Products() {
 
 
                             </div>
+                            <button className='btn btn-outline-secondary btn-sm position-relative' onClick={loginhandler}>Login
+                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                  
+                                </span>
+                            </button>
                             <button className='btn btn-outline-secondary btn-sm position-relative' onClick={carthandler}>Cart
                                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                     {cartItems.length}

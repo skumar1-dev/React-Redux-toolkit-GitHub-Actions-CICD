@@ -1,0 +1,709 @@
+# System Design: API Design, Scalability & Basic LLD Concepts
+
+System design is the process of designing software systems that are reliable, scalable, maintainable, and efficient.
+
+For software engineering interviews, system design is generally divided into two major areas:
+
+1. HLD (High-Level Design): Architecture, services, databases, scalability, communication, and distributed systems.
+2. LLD (Low-Level Design): Classes, objects, interfaces, design patterns, relationships, and implementation details.
+
+Let's understand the three important areas step by step.
+
+# 1. API Design
+
+API (Application Programming Interface) defines how different applications or services communicate with each other.
+
+For example, consider an e-commerce application.
+
+- Frontend sends a request to place an order.
+- Backend receives the request.
+- Backend processes payment and creates the order.
+- Backend returns a response.
+
+## 1.1 REST API fundamentals
+
+REST APIs commonly use HTTP methods.
+
+| Method | Purpose | Example |
+| --- | --- | --- |
+| GET | Fetch data | GET /users/101 |
+| POST | Create data | POST /users |
+| PUT | Replace entire resource | PUT /users/101 |
+| PATCH | Partially update resource | PATCH /users/101 |
+| DELETE | Delete resource | DELETE /users/101 |
+
+Example API:
+
+Create User
+
+http
+
+```http
+POST /api/v1/users
+Content-Type: application/json
+```
+
+Request:
+
+json
+
+```json
+{
+  "name": "Rahul",
+  "email": "rahul@gmail.com"
+}
+```
+
+Response:
+
+json
+
+```json
+{
+  "id": 101,
+  "name": "Rahul",
+  "email": "rahul@gmail.com",
+  "createdAt": "2026-11-18T10:00:00Z"
+}
+```
+
+## 1.2 HTTP status codes
+
+| Status | Meaning |
+| --- | --- |
+| 200 | OK |
+| 201 | Created |
+| 204 | No Content |
+| 400 | Bad Request |
+| 401 | Unauthorized |
+| 403 | Forbidden |
+| 404 | Not Found |
+| 409 | Conflict |
+| 429 | Too Many Requests |
+| 500 | Internal Server Error |
+| 503 | Service Unavailable |
+
+## 1.3 Important API design concepts
+
+1. API Versioning
+
+When APIs change, old clients should continue working.
+
+http
+
+```http
+/api/v1/users
+/api/v2/users
+```
+
+2. Pagination
+
+When an API returns millions of records, don't return everything at once.
+
+Offset-based pagination:
+
+http
+
+```http
+GET /products?page=1&limit=20
+```
+
+Cursor-based pagination:
+
+http
+
+```http
+GET /products?cursor=abc123&limit=20
+```
+
+Cursor pagination is particularly useful for large, frequently changing datasets.
+
+3. Filtering and Sorting
+
+http
+
+```http
+GET /products?category=electronics&sort=price
+```
+
+4. Authentication and Authorization
+
+- Authentication: Who are you?
+- Authorization: What are you allowed to access?
+
+Common approaches:
+
+- JWT
+- OAuth 2.0
+- API Keys
+- Session-based authentication
+
+5. Idempotency
+
+An operation is idempotent if repeating the same request produces the same intended result.
+
+Example:
+
+http
+
+```http
+PUT /users/101
+```
+
+If called multiple times with the same payload, the final user state remains the same.
+
+For payment APIs, idempotency keys help prevent duplicate charges when clients retry requests.
+
+# 2. Scalability in System Design
+
+Scalability means the ability of a system to handle increasing traffic, users, and data without significant performance degradation.
+
+For example:
+
+- Initially: 1,000 users
+- After six months: 1 lakh users
+- After one year: 10 million users
+
+Your architecture should support this growth.
+
+## 2.1 Vertical Scaling
+
+Increasing the capacity of an existing server.
+
+Vertical vs. Horizontal Scaling: When to Choose Each
+
+[systemdr.systemdrd.com](<https://systemdr.systemdrd.com/p/vertical-vs-horizontal-scaling-when?utm_source=chatgpt.com>)
+
+Example:
+
+- Increase RAM from 8 GB to 32 GB.
+- Increase CPU from 4 cores to 16 cores.
+
+Advantages:
+
+- Simple implementation.
+- No major architecture changes.
+
+Disadvantages:
+
+- Hardware limitations.
+- Single point of failure.
+- Can become expensive.
+
+## 2.2 Horizontal Scaling
+
+Adding more servers to handle incoming traffic.
+
+Load Balancing Explained: What It Is, How It Works, and When You Need It | Ayush Sharma
+
+[aysh.me](<https://aysh.me/blogs/load-balancing-complete-guide?utm_source=chatgpt.com>)
+
+Example:
+
+Instead of one application server, deploy five servers.
+
+A load balancer distributes incoming requests across them.
+
+Advantages:
+
+- Better availability.
+- Handles more traffic.
+- Supports fault tolerance.
+
+Disadvantages:
+
+- More infrastructure complexity.
+- Requires distributed-system considerations.
+- Session management becomes important.
+
+## 2.3 Load Balancer
+
+A load balancer distributes incoming requests across multiple backend servers.
+
+Common algorithms:
+
+- Round Robin: Distributes requests sequentially.
+- Least Connections: Sends requests to the server with the fewest active connections.
+- IP Hash: Routes requests based on client IP.
+- Weighted Round Robin: Distributes traffic according to server capacity.
+
+## 2.4 Caching
+
+Caching stores frequently accessed data so that the application doesn't repeatedly query the database.
+
+Redis Caching Strategies for High-Performance Applications | by Bakti Pratama | Medium
+
+[baktiayp.medium.com](<https://baktiayp.medium.com/redis-caching-strategies-for-high-performance-applications-01de386e6e43?utm_source=chatgpt.com>)
+
+Example:
+
+A user requests product details.
+
+1. Application checks Redis.
+2. If data exists, return it (Cache Hit).
+3. Otherwise, fetch from the database.
+4. Store the result in Redis.
+5. Return the response.
+
+Popular caching technologies:
+
+- Redis
+- Memcached
+- CDN caching
+- Browser caching
+
+Important caching concepts:
+
+| Concept | Meaning |
+| --- | --- |
+| Cache Hit | Data found in cache |
+| Cache Miss | Data not found |
+| TTL | Time to Live |
+| Cache Eviction | Removing old data |
+| Cache Invalidation | Removing or updating stale data |
+
+## 2.5 Database Scalability
+
+Two important concepts:
+
+Database Replication
+
+Maintain multiple copies of the database.
+
+- Primary database handles writes.
+- Replica databases can handle reads.
+
+Master-slave replication | The System Design Primer
+
+[phucnguyen81.github.io](<https://phucnguyen81.github.io/system-design-primer/pages/master-slave-replication.html?utm_source=chatgpt.com>)
+
+Benefits:
+
+- Improves read scalability.
+- Improves availability.
+- Supports disaster recovery.
+
+Database Sharding
+
+Divide a large database into smaller databases called shards.
+
+Example:
+
+Suppose you have 10 million users.
+
+- Shard 1: User IDs 1–1 million.
+- Shard 2: User IDs 1–2 million.
+- Shard 3: User IDs 2–3 million.
+
+Each shard stores only a portion of the overall data.
+
+Benefits:
+
+- Distributes database load.
+- Supports large datasets.
+- Improves write scalability.
+
+## 2.6 Other important scalability concepts
+
+| Concept | Purpose |
+| --- | --- |
+| CDN | Delivers static content closer to users |
+| Message Queue | Asynchronous communication |
+| Kafka | Distributed event streaming |
+| Microservices | Independently deployable services |
+| Rate Limiting | Controls request frequency |
+| Circuit Breaker | Prevents repeated calls to failing services |
+| Auto Scaling | Automatically adjusts server capacity |
+| Database Indexing | Speeds up database queries |
+
+# 3. Basic LLD (Low-Level Design)
+
+LLD focuses on how individual components of a software system are implemented.
+
+It mainly involves:
+
+- Object-oriented programming.
+- SOLID principles.
+- Design patterns.
+- UML diagrams.
+- Class relationships.
+- Interfaces and abstractions.
+
+## 3.1 OOP concepts
+
+Four major OOP principles:
+
+| Concept | Explanation |
+| --- | --- |
+| Encapsulation | Combining data and methods inside a class |
+| Inheritance | Reusing properties of another class |
+| Polymorphism | Same interface, different implementations |
+| Abstraction | Hiding implementation details |
+
+Example:
+
+java
+
+```java
+class Vehicle {
+    void start() {
+        System.out.println("Vehicle started");
+    }
+}
+
+class Car extends Vehicle {
+    @Override
+    void start() {
+        System.out.println("Car started");
+    }
+}
+```
+
+Here:
+
+- `Vehicle` is the parent class.
+- `Car` inherits from `Vehicle`.
+- Method overriding demonstrates runtime polymorphism.
+
+## 3.2 SOLID Principles
+
+These five principles are extremely important for LLD interviews.
+
+| Principle | Meaning |
+| --- | --- |
+| S | Single Responsibility Principle |
+| O | Open/Closed Principle |
+| L | Liskov Substitution Principle |
+| I | Interface Segregation Principle |
+| D | Dependency Inversion Principle |
+
+1. Single Responsibility Principle
+
+A class should have only one reason to change.
+
+Bad design:
+
+java
+
+```java
+class User {
+    void saveToDatabase() {}
+    void sendEmail() {}
+    void generateReport() {}
+}
+```
+
+Better design:
+
+java
+
+```java
+class UserService {}
+class EmailService {}
+class ReportService {}
+```
+
+2. Open/Closed Principle
+
+Software entities should be open for extension but closed for modification.
+
+3. Liskov Substitution Principle
+
+Child classes should be usable wherever their parent classes are expected without breaking functionality.
+
+4. Interface Segregation Principle
+
+Prefer smaller, specific interfaces rather than one large interface.
+
+5. Dependency Inversion Principle
+
+High-level modules should depend on abstractions, not concrete implementations.
+
+## 3.3 Important Design Patterns
+
+Design patterns are reusable solutions to commonly occurring software design problems.
+
+Creational Patterns
+
+- Singleton
+- Factory
+- Abstract Factory
+- Builder
+
+Structural Patterns
+
+- Adapter
+- Decorator
+- Facade
+- Proxy
+
+Behavioral Patterns
+
+- Strategy
+- Observer
+- State
+- Command
+- Template Method
+
+Some important examples:
+
+Singleton Pattern
+
+Ensures only one instance of a class exists.
+
+java
+
+```java
+class DatabaseConnection {
+    private static DatabaseConnection instance;
+
+    private DatabaseConnection() {}
+
+    public static DatabaseConnection getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
+}
+```
+
+Note: This basic implementation isn't thread-safe. In production, use a thread-safe approach.
+
+Factory Pattern
+
+Creates objects without exposing the object creation logic to the client.
+
+java
+
+```java
+interface Notification {
+    void send();
+}
+
+class EmailNotification implements Notification {
+    public void send() {
+        System.out.println("Sending Email");
+    }
+}
+
+class SMSNotification implements Notification {
+    public void send() {
+        System.out.println("Sending SMS");
+    }
+}
+```
+
+Strategy Pattern
+
+Allows different algorithms to be selected dynamically.
+
+Example: Different payment methods such as:
+
+- Credit Card
+- UPI
+- Net Banking
+
+Each payment method implements the same interface.
+
+# 4. Practical LLD Example: Parking Lot System
+
+This is one of the most common LLD interview questions.
+
+Significance of UML Diagrams in Object Oriented Design Interviews | by Vrinda Goyal | Medium
+
+[medium.com](<https://medium.com/%40vrindag/significance-of-uml-diagrams-in-object-oriented-design-interviews-a2d264131549?utm_source=chatgpt.com>)
+
+## Requirements
+
+- Parking lot has multiple floors.
+- Each floor has multiple parking spots.
+- Different vehicle types are supported.
+- Vehicles can enter and exit.
+- Parking tickets are generated.
+- Payment is calculated based on parking duration.
+
+## Class Design
+
+java
+
+```java
+
+enum VehicleType {
+    BIKE, CAR, TRUCK
+}
+
+class Vehicle {
+    String number;
+    VehicleType type;
+}
+
+class ParkingSpot {
+    int spotId;
+    VehicleType supportedType;
+    boolean isOccupied;
+    Vehicle vehicle;
+}
+
+class ParkingFloor {
+    int floorId;
+    List<ParkingSpot> spots;
+}
+
+class ParkingTicket {
+    String ticketId;
+    Vehicle vehicle;
+    long entryTime;
+}
+
+interface PaymentStrategy {
+    double calculateFee(ParkingTicket ticket);
+}
+
+class ParkingLot {
+    List<ParkingFloor> floors;
+
+    ParkingTicket parkVehicle(Vehicle vehicle) {
+        // Find an available spot
+        // Allocate spot
+        // Generate ticket
+        return null;
+    }
+
+    void unparkVehicle(ParkingTicket ticket) {
+        // Calculate fee
+        // Release parking spot
+    }
+}
+```
+
+### Which design patterns can be used?
+
+- Factory Pattern: Create different vehicle objects.
+- Strategy Pattern: Implement different parking fee calculations.
+- Singleton Pattern: Manage a single parking lot instance, if the domain requires it.
+- Observer Pattern: Notify users when parking availability changes.
+
+# 5. HLD vs LLD: Important Differences
+
+| Feature | HLD | LLD |
+| --- | --- | --- |
+| Focus | Overall architecture | Internal implementation |
+| Components | Services, databases | Classes, interfaces |
+| Diagrams | Architecture diagrams | UML class diagrams |
+| Scalability | Very important | Usually less central |
+| Design patterns | Architectural patterns | GoF patterns |
+| Example | Design YouTube | Design a Parking Lot |
+
+# 6. Recommended System Design Interview Preparation Roadmap
+
+Here is a practical learning sequence.
+
+1. Phase 1: Fundamentals
+   - HTTP and REST APIs
+   - SQL and NoSQL databases
+   - OOP concepts
+   - Networking basics
+   - DB indexing
+2. Phase 2: Scalability
+   - Load balancing
+   - Caching
+   - Replication and sharding
+   - Message queues
+   - Microservices
+   - CAP theorem
+3. Phase 3: LLD
+   - SOLID principles
+   - UML diagrams
+   - Design patterns
+   - Class relationships
+   - Dependency injection
+4. Phase 4: HLD Practice
+   - URL Shortener
+   - WhatsApp
+   - YouTube
+   - Instagram
+   - Rate Limiter
+   - Notification System
+5. Phase 5: LLD Practice
+   - Parking Lot
+   - Elevator System
+   - Library Management
+   - ATM Machine
+   - Splitwise
+   - Movie Ticket Booking
+
+## 7. Important Interview Questions
+
+| Topic | Questions to prepare |
+| --- | --- |
+| API Design | REST vs GraphQL, PUT vs PATCH, idempotency |
+| Scalability | Vertical vs horizontal scaling |
+| Load Balancing | Round Robin vs Least Connections |
+| Caching | Cache Aside vs Write Through |
+| Database | SQL vs NoSQL, indexing, sharding |
+| Distributed Systems | CAP theorem, eventual consistency |
+| LLD | SOLID principles, Factory, Strategy |
+| Architecture | Monolith vs Microservices |
+
+## 8. Let's test your understanding
+
+System Design Quiz
+
+4/4 answered
+
+1. Which approach is generally used to handle increasing traffic by adding more servers?
+
+Vertical scaling
+
+1 Horizontal scaling
+
+Database indexing
+
+Caching
+
+Correct\!Horizontal scaling adds more servers to distribute workload.
+
+2. Which HTTP method is generally used to partially update a resource?
+
+GET
+
+POST
+
+2 PATCH
+
+DELETE
+
+Correct\!PATCH updates selected fields without replacing the entire resource.
+
+3. Which design pattern is useful for switching between UPI, Card and Net Banking payment algorithms?
+
+Singleton
+
+1 Strategy
+
+Adapter
+
+Observer
+
+Correct\!Strategy encapsulates interchangeable algorithms behind a common interface.
+
+4. What is the main purpose of Redis in a typical web architecture?
+
+Frontend rendering
+
+1 Caching
+
+Code compilation
+
+Authentication only
+
+Correct\!Redis is commonly used as an in-memory cache to reduce database load.
+
+# 4/4 correct
+
+ Retry quiz
+
+My recommendation: Learn API design and database fundamentals first, then scalability concepts, followed by SOLID and design patterns. After that, practice one HLD and one LLD problem regularly.
+
+I can also teach you System Design from beginner to interview-ready level, topic by topic, with Java examples, architecture diagrams, and real interview problems.

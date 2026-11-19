@@ -1,0 +1,48 @@
+
+
+
+
+--Declare @studentTable Table
+--(
+--	id INT identity(1,1),
+--	rollno varchar(50),
+--	fullname varchar(100),
+--	fname varchar(100),
+--	mname varchar(100),
+--	fk_collegeid INT,
+--	fk_degreeid INT,
+--	fk_degreeCycleId INT,
+--	fk_subjectId INT
+--)
+--Delete FROM @studentTable 
+
+--INSERT INTO @studentTable
+--(
+--	rollno,fullname,fname ,mname ,fk_collegeid ,fk_degreeid ,fk_degreeCycleId ,fk_subjectId 
+--)
+--SELECT rollno,fullname,fname ,mname ,fk_collegeid ,fk_degreeid ,fk_degreecycleidcurrent ,fk_subjectId 
+--FROM SMS_Student_Mst WHERE fk_curr_session = 8 and fk_degreeid = 7
+
+
+--SELECT  @end = COUNT(1) FROM @studentTable 
+
+DECLARE @start INT ,@end INT = 96
+SET @start = 1
+
+SET @end = ISNULL(@end,0)
+
+DECLARE @PA DECIMAL(18,2) = 25000,@ROI INT = 2,@result decimal(18,2)
+
+WHILE (@start <= @end)
+BEGIN
+	Print 'Total Amount ' + Convert(VARCHAR,@PA)
+	SET @result =  (@PA*@ROI/100)
+    PRINT CONVERT(VARCHAR,@start) + ' Week value is = ' + CONVERT(VARCHAR,@result)	
+    SET @start  = @start  + 1
+	SET @PA = CAST(ISNULL(@PA,0) + ISNULL(@result,0) AS DECIMAL(18,2))
+	--IF (@start >=7)
+	--BEGIN
+	--	BREAK
+	--END
+    --SET @start  = @start  + 1
+END

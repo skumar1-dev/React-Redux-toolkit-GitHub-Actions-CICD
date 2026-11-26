@@ -1,0 +1,280 @@
+Microservices Interview Questions and Answers – .NET Core Web API
+Below are answers to all 14 questions in simple, natural, conversational English, just like you would explain them to an interviewer. The answers are technical enough for a .NET developer but don't sound overly memorized or bookish.
+
+1. What is Microservices Architecture?
+Answer:
+
+Microservices architecture is basically an approach where we divide a big application into smaller, independent services.
+
+Each service is responsible for a specific business functionality.
+
+For example, in an e-commerce application, we can have separate services for User Management, Product Management, Order Management, Payment, and Notifications.
+
+We develop these services separately using ASP.NET Core Web API, and each service handles its own business logic and database.
+
+The biggest advantage is that we can develop, deploy, and scale each service independently without affecting the entire application.
+
+2. What is the difference between Monolithic and Microservices Architecture?
+Answer:
+
+In a monolithic architecture, the entire application is developed as a single unit. All the modules, like users, products, orders, and payments, are part of the same application.
+
+So, if we make a small change in one module, sometimes we need to deploy the entire application again.
+
+But in microservices architecture, we divide the application into smaller independent services.
+
+For example, Product Service, Order Service, and Payment Service can all be separate ASP.NET Core Web APIs.
+
+Each service can be developed, deployed, and scaled independently.
+
+So, the main difference is that monolithic architecture has one large application, whereas microservices architecture has multiple small, independent services.
+
+3. Why do we use Database per Microservice?
+Answer:
+
+In microservices architecture, we generally follow the database-per-service approach.
+
+It means each microservice manages its own database and is responsible for its own data.
+
+For example, Product Service has ProductDB, Order Service has OrderDB, and Payment Service has PaymentDB.
+
+We follow this approach because we want to keep services independent.
+
+If we make any changes to the Product database, it shouldn't directly affect the Order or Payment database.
+
+Also, each service can choose a database based on its requirements.
+
+For example, we can use SQL Server for Order Service and MongoDB for Product Service.
+
+One important thing is that one service should not directly access another service's database. If it needs some information, it should communicate through an API or messaging system.
+
+4. What is API Gateway? Why do we need it?
+Answer:
+
+An API Gateway basically acts as a single entry point for all the microservices.
+
+Suppose we have multiple services, like User Service, Product Service, Order Service, and Payment Service.
+
+Instead of calling each service directly from the client application, we send all requests through the API Gateway.
+
+The API Gateway identifies the incoming request and forwards it to the appropriate microservice.
+
+For example, if the client sends a request to /api/orders, the gateway forwards that request to the Order Service.
+
+Apart from routing, an API Gateway can also handle authentication, rate limiting, logging, and other cross-cutting concerns.
+
+In .NET, we can implement an API Gateway using YARP or Ocelot.
+
+5. How do Microservices communicate with each other?
+Answer:
+
+Microservices generally communicate with each other in two ways: synchronous communication and asynchronous communication.
+
+In synchronous communication, one service directly calls another service using HTTP and waits for the response.
+
+For example, Order Service can call Product Service using HttpClient to get product details.
+
+In ASP.NET Core, we commonly use IHttpClientFactory to manage HTTP client instances.
+
+In asynchronous communication, services communicate using a message broker like RabbitMQ or Azure Service Bus.
+
+For example, when an order is created, Order Service publishes an OrderCreated event. Payment Service and Notification Service can consume that event and perform their respective operations.
+
+So, depending on the business requirement, we can use either REST API communication or message-based communication.
+
+6. What is the difference between Synchronous and Asynchronous Communication?
+Answer:
+
+The main difference is whether the calling service has to wait for a response or not.
+
+In synchronous communication, one service calls another service and waits until it gets a response.
+
+For example, Order Service calls Product Service to get product information. Until Product Service responds, Order Service waits.
+
+In asynchronous communication, the calling service doesn't need to wait for the other service to complete its processing.
+
+For example, when an order is placed, Order Service publishes an event to RabbitMQ. Notification Service consumes that event whenever it's ready and sends an email.
+
+So, synchronous communication is generally used when we need an immediate response, whereas asynchronous communication is useful for background processing and loosely coupled services.
+
+7. What is RabbitMQ? How does it work?
+Answer:
+
+RabbitMQ is a message broker that helps different microservices communicate with each other asynchronously.
+
+Basically, instead of one service directly calling another service, we can send messages through RabbitMQ.
+
+Let me explain with an example.
+
+Suppose a customer places an order.
+
+First, Order Service creates the order and publishes an OrderCreated message to RabbitMQ.
+
+RabbitMQ receives that message and routes it to the appropriate queue.
+
+Then Payment Service or Notification Service consumes that message and performs its respective operation.
+
+The main advantage is that services don't need to depend directly on each other.
+
+Even if Notification Service is temporarily unavailable, the message can remain in the queue until it is processed, provided the queue and message are configured for durability.
+
+So, RabbitMQ helps us build loosely coupled and asynchronous microservices.
+
+8. What is the Saga Pattern?
+Answer:
+
+Saga Pattern is used to manage transactions that involve multiple microservices.
+
+In microservices, every service has its own database, so we cannot easily use one single database transaction across all services.
+
+Let me explain with an example.
+
+Suppose a customer places an order.
+
+First, Order Service creates the order. Then Payment Service processes the payment, and Inventory Service updates the stock.
+
+Now imagine the payment succeeds, but inventory updating fails.
+
+In this situation, we need a way to handle the failure and maintain data consistency.
+
+That's where the Saga Pattern comes in.
+
+It manages the complete business transaction through multiple local transactions.
+
+If something fails, we can execute compensating transactions to undo or reverse the previous operations where possible.
+
+There are two common approaches:
+
+Choreography: Services communicate through events.
+
+Orchestration: A central coordinator manages the workflow.
+
+9. What is Circuit Breaker Pattern?
+Answer:
+
+Circuit Breaker is a fault-tolerance pattern that helps prevent repeated calls to a service that is already failing.
+
+For example, suppose Order Service continuously calls Payment Service, but Payment Service is down.
+
+If Order Service keeps calling it again and again, it can waste resources and affect application performance.
+
+To avoid this situation, we use the Circuit Breaker Pattern.
+
+It generally has three states:
+
+Closed: Requests are allowed normally.
+
+Open: Requests are temporarily blocked because failures have crossed a configured threshold.
+
+Half-Open: A few test requests are allowed to check whether the service has recovered.
+
+If the service starts working again, the circuit goes back to the Closed state.
+
+In .NET, we can implement this using Polly or Microsoft.Extensions.Http.Resilience.
+
+10. How do you implement JWT Authentication in Microservices?
+Answer:
+
+JWT stands for JSON Web Token. We use it to authenticate users and securely access our APIs.
+
+Let me explain how it works.
+
+First, the user logs in by providing a username and password.
+
+The Authentication Service validates the credentials. If they are correct, it generates a JWT token and sends it back to the client.
+
+Now, whenever the client calls another microservice, it sends that token in the Authorization header.
+
+The receiving microservice validates the token, checks its signature, expiration, and claims, and then decides whether the user is authorized to access that API.
+
+In ASP.NET Core Web API, we can implement this using JWT Bearer Authentication middleware.
+
+For larger applications, we can also use a centralized identity provider, such as Microsoft Entra ID or another OpenID Connect provider.
+
+11. How do you handle Distributed Transactions in Microservices?
+Answer:
+
+In microservices, each service has its own database, so managing transactions across multiple services can be challenging.
+
+For example, when a customer places an order, we might need to save order details, process payment, and update inventory.
+
+These operations involve different services and databases.
+
+We generally handle this using the Saga Pattern.
+
+Each service performs its own local transaction. If all operations succeed, the business process is completed.
+
+But if one operation fails, we can execute compensating transactions to reverse the previous successful operations.
+
+We can implement this using RabbitMQ or Azure Service Bus for event-based communication.
+
+We can also use the Outbox Pattern to make sure database changes and outgoing events are handled reliably.
+
+12. How do you deploy .NET Core Microservices using Docker?
+Answer:
+
+Docker helps us package our microservices along with their required dependencies into containers.
+
+For example, suppose we have Product Service, Order Service, and Payment Service, all developed using ASP.NET Core Web API.
+
+First, we create a Dockerfile for each service.
+
+Then we build Docker images for those services.
+
+After that, we run the images as containers.
+
+We can use Docker Compose to manage multiple containers together, including databases and RabbitMQ.
+
+For larger applications and production environments, we can use Kubernetes to manage container deployment, scaling, networking, and recovery.
+
+The main advantage of Docker is that our application runs consistently across different environments, such as development, testing, and production.
+
+13. What is the Outbox Pattern?
+Answer:
+
+The Outbox Pattern is used to make sure that database changes and message publishing happen reliably.
+
+Let me explain with an example.
+
+Suppose Order Service creates a new order and saves it in the database.
+
+After saving the order, it needs to publish an OrderCreated event to RabbitMQ.
+
+Now imagine the order is successfully saved in the database, but RabbitMQ is temporarily unavailable.
+
+In this case, the order is created, but the event is not published.
+
+To avoid this problem, we use the Outbox Pattern.
+
+Instead of directly publishing the message, we save the order details and the event in the same database transaction.
+
+A background service then reads the pending events from the Outbox table and publishes them to RabbitMQ.
+
+After successful publishing, it marks the event as processed.
+
+This helps us avoid losing important events when communication with the message broker fails.
+
+14. How do you implement Centralized Logging in Microservices?
+Answer:
+
+In microservices architecture, we have multiple services running independently, so managing logs separately can become difficult.
+
+For example, suppose a customer places an order, but something fails during payment processing.
+
+The request might pass through API Gateway, Order Service, and Payment Service.
+
+If each service maintains separate logs, it becomes difficult to identify exactly where the problem occurred.
+
+To solve this, we implement centralized logging.
+
+Each microservice sends its logs to a centralized logging system.
+
+In .NET, we can use Serilog to generate application logs.
+
+We can use tools like Seq, Elasticsearch, and Kibana to store, search, and visualize logs.
+
+We can also use OpenTelemetry for distributed tracing.
+
+By using a Correlation ID or Trace ID, we can track a single request across multiple microservices.
+
+This makes debugging and monitoring much easier.

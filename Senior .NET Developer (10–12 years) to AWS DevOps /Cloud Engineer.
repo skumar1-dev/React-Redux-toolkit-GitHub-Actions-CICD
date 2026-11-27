@@ -1,0 +1,158 @@
+This is a very important interview question when transitioning from Senior .NET Developer (10–12 years) to AWS DevOps / Cloud Engineer.
+
+The interviewer may ask:
+
+- Why do you want to move from .NET Development to AWS DevOps?
+- Why are you changing your career after 10–12 years?
+- Are you not interested in development anymore?
+- Why should we hire you for a DevOps role when your background is .NET?
+- Do you have real-time AWS and DevOps experience?
+
+Your answer should communicate that you are upgrading your technical career, not abandoning your previous experience.
+
+## 1. Best answer: Why are you moving from .NET to AWS DevOps?
+
+This is the answer I recommend practising for interviews.
+
+Writing
+
+I have around 10–12 years of experience in software development, primarily working with ASP.NET Core, Web APIs, SQL Server, Microservices, and frontend technologies.
+
+During my development journey, I became increasingly interested in how applications are deployed, managed, scaled, and monitored in production environments.
+
+While working with microservices and modern application architectures, I realized that development is only one part of delivering a successful application. Cloud infrastructure, automation, CI/CD pipelines, containerization, monitoring, and scalability are equally important.
+
+That's why I started expanding my knowledge into AWS, Docker, Kubernetes, Terraform, and CI/CD practices.
+
+I don't see this as moving away from .NET development. I see it as expanding my expertise from application development into cloud infrastructure and DevOps.
+
+My existing development experience helps me understand application architecture, dependencies, deployment requirements, troubleshooting, and production challenges.
+
+My long-term goal is to become a strong Cloud and DevOps professional who can understand both application development and cloud infrastructure.
+
+## 2. If the interviewer asks: Why are you changing your career after 10–12 years?
+
+Writing
+
+I don't consider this a complete career change. I consider it a natural progression in my technical career.
+
+Over the last 10–12 years, I have built strong experience in application development, microservices, APIs, databases, and enterprise applications.
+
+As technology evolved towards cloud-native applications, automation, and distributed systems, I became interested in understanding the complete application lifecycle, from development to deployment and production monitoring.
+
+I believe combining my software development experience with AWS and DevOps knowledge will allow me to contribute at a broader technical level.
+
+I want to use my existing experience while developing deeper expertise in cloud engineering and automation.
+
+## 3. If they ask: Are you leaving .NET development completely?
+
+Writing
+
+No, not necessarily. My .NET development experience is one of my biggest strengths.
+
+I understand how applications are developed, how microservices communicate, how databases are integrated, and what challenges developers face during deployments.
+
+I want to use this knowledge in cloud and DevOps environments.
+
+For example, I can understand how to containerize an ASP.NET Core application using Docker, deploy it through AWS ECS or EKS, automate the deployment using GitHub Actions, provision infrastructure using Terraform, and monitor applications using CloudWatch.
+
+So, rather than leaving my development background behind, I want to combine it with cloud and DevOps engineering.
+
+## 4. If they ask: You have .NET experience, but why should we hire you for AWS DevOps?
+
+Writing
+
+My advantage is that I understand both the application development side and the infrastructure requirements.
+
+With my 10–12 years of development experience, I understand application architecture, APIs, microservices, database connectivity, performance issues, and production troubleshooting.
+
+Along with that, I am developing hands-on skills in AWS services such as EC2, S3, RDS, SQS, SNS, CloudWatch, IAM, ECS, and ECR, as well as Docker, Kubernetes, Terraform, and CI/CD pipelines.
+
+This combination helps me understand not just how to deploy an application, but also why certain infrastructure, security, scalability, and monitoring configurations are required.
+
+I believe this development background can bring additional value to your DevOps team.
+
+## 5. Important: Be prepared for technical follow-up questions
+
+When you say you are moving into AWS DevOps, interviewers may ask these questions:
+
+| Interview question | What you should prepare |
+| --- | --- |
+| How do you deploy .NET applications on AWS? | Docker, ECR, ECS |
+| What is CI/CD? | GitHub Actions, Jenkins |
+| What is Infrastructure as Code? | Terraform |
+| How do you manage AWS infrastructure? | VPC, IAM, EC2 |
+| How do you monitor applications? | CloudWatch |
+| How do you manage asynchronous processing? | SQS, SNS |
+| How do you manage application secrets? | Secrets Manager |
+| How do you handle deployment failures? | Rollback, health checks |
+| How do you scale applications? | ECS Auto Scaling, Load Balancer |
+
+## 6. Five mistakes you should avoid
+
+Don't give these answers:
+
+- "I am bored with .NET development."
+- "DevOps has more salary."
+- "AWS is trending, so I want to switch."
+- "Development has no future."
+- "I just want to change my technology."
+
+Instead, communicate:
+
+- Career progression.
+- Interest in cloud-native architecture.
+- Application lifecycle understanding.
+- Automation and scalability.
+- Your ability to combine development and infrastructure knowledge.
+
+## 7. My advice: Position yourself correctly
+
+With your experience, don't introduce yourself as a fresher in DevOps.
+
+Position yourself as:
+
+Recommended professional positioning# Senior Software Engineer | .NET | AWS Cloud | DevOps | Microservices
+
+Your key strengths:
+
+- 10–12 years of software engineering experience.
+- Enterprise application and microservices understanding.
+- ASP.NET Core and Web API.
+- AWS cloud infrastructure.
+- Docker and Kubernetes.
+- Terraform and CI/CD automation.
+
+## 8. Let's prepare you for a real interview
+
+I recommend practising a mock interview specifically for someone transitioning from Senior .NET Developer to AWS DevOps.
+
+Which position are you targeting?
+
+AWS DevOps Engineer AWS DevOps Engineer
+
+AWS Cloud Engineer
+
+Cloud Solutions Architect
+
+.NET + AWS Technical Architect
+
+Your current AWS practical experience?
+
+Only theoretical knowledge
+
+Learning AWS and building hands-on projects Learning AWS and building hands-on projects
+
+Worked on AWS in production
+
+Interview difficulty
+
+Basic
+
+Senior level Senior level (10–12 years)
+
+Architect level
+
+ Start my mock interview
+
+One important point: Never claim production AWS or DevOps experience if you have only practised in a personal project. Interviewers can quickly identify the difference. Present your .NET production experience confidently and explain your AWS hands-on work honestly.
